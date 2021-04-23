@@ -2,13 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.PayAndGo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">#ff5c5c</item>
+        <item name="colorPrimaryVariant">#ff8f89</item>
+        <item name="colorOnPrimary">#c62332</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">#f4c5d3</item>
+        <item name="colorSecondaryVariant">#fff8ff</item>
+        <item name="colorOnSecondary">#c194a2</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
@@ -16,13 +16,13 @@
 
     <style name="SplashScreenTheme.PayAndGo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">#ff5c5c</item>
+        <item name="colorPrimaryVariant">#ff8f89</item>
+        <item name="colorOnPrimary">#c62332</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">#f4c5d3</item>
+        <item name="colorSecondaryVariant">#fff8ff</item>
+        <item name="colorOnSecondary">#c194a2</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
