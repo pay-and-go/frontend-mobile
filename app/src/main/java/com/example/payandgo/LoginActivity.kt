@@ -28,11 +28,32 @@ class LoginActivity : AppCompatActivity() {
             ForegroundColorSpan(Color.parseColor("#c62332")),
             18, 29,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        bindingLogin.button.setOnClickListener {
+
+        bindingLogin.buttonLogin.setOnClickListener {
             val i = Intent(this, MapsActivity::class.java)
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
             finish()
+        }
+
+        bindingLogin.register.setOnClickListener {
+            val i = Intent(this, RegisterActivity::class.java)
+            startActivity(i)
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+            finish()
+        }
+    }
+
+    fun initSesion(){
+        bindingLogin.buttonLogin.setOnClickListener{ accessToInfo() }
+    }
+
+    fun accessToInfo(){
+        if(bindingLogin.etUserName.text.toString().isNotEmpty()){
+            //Guardar el usuario
+
+        }else {
+
         }
     }
 }

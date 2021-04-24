@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".RegisterActivity"
     android:background="@drawable/login_background">
 
     <LinearLayout
@@ -25,7 +25,58 @@
             app:srcCompat="@drawable/logo" />
 
         <EditText
-            android:id="@+id/etUserName"
+            android:id="@+id/etFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:padding="10dp"
+            android:drawableStart="@drawable/userl"
+            android:drawablePadding="10dp"
+            android:hint="Nombre"/>
+
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:padding="10dp"
+            android:drawableStart="@drawable/userl"
+            android:drawablePadding="10dp"
+            android:hint="Apellido"/>
+
+        <EditText
+            android:id="@+id/etIdentifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:padding="10dp"
+            android:drawableStart="@drawable/userl"
+            android:drawablePadding="10dp"
+            android:hint="Cedula"/>
+
+        <EditText
+            android:id="@+id/etMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -42,7 +93,7 @@
             android:hint="Correo"/>
 
         <EditText
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -59,13 +110,13 @@
             android:hint="Contraseña"/>
 
         <Button
-            android:id="@+id/buttonLogin"
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:text="Iniciar Sesión"
+            android:text="Registrar"
             android:textColor="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,25 +124,16 @@
             android:textSize="18dp"
             android:background="#c62332"/>
 
-        <TextView
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="¿Olvidaste la contraseña?"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:layout_gravity="center_horizontal"/>
 
         <TextView
-            android:id="@+id/register"
+            android:id="@+id/login"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textSize="18dp"
-            tools:text="No tienes cuenta? Registrate"
+            tools:text="¿Ya tienes cuenta? Inicia Sesión"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 

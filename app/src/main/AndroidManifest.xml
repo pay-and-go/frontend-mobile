@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PayAndGo">
-        <activity android:name=".LoginActivity" android:theme="@style/SplashScreenTheme.PayAndGo"></activity>
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/SplashScreenTheme.PayAndGo" ></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/SplashScreenTheme.PayAndGo" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo">
@@ -39,7 +43,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>
