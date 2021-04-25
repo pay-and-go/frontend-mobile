@@ -1,0 +1,10 @@
+query AllUsers {
+  allUsers {
+    id
+    first_name
+    last_name
+    cedula
+    mail
+    password
+  }
+}
