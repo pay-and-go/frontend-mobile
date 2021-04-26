@@ -1,5 +1,6 @@
 package com.example.payandgo
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
@@ -9,8 +10,13 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.apollographql.apollo.coroutines.await
 import com.example.payandgo.databinding.ActivityLoginBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,10 +36,7 @@ class LoginActivity : AppCompatActivity() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         bindingLogin.buttonLogin.setOnClickListener {
-            val i = Intent(this, MapsActivity::class.java)
-            startActivity(i)
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
-            finish()
+            accessToInfo(this)
         }
 
         bindingLogin.register.setOnClickListener {
@@ -44,16 +47,40 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun initSesion(){
-        bindingLogin.buttonLogin.setOnClickListener{ accessToInfo() }
-    }
-
-    fun accessToInfo(){
-        if(bindingLogin.etUserName.text.toString().isNotEmpty()){
-            //Guardar el usuario
-
+    fun accessToInfo(ctx:Context){
+        if(bindingLogin.etUserName.text.toString().isNotEmpty()
+                && bindingLogin.etPassword.text.toString().isNotEmpty()){
+            //Verificar si esta en la db
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = apolloClient.query(AllUsersQuery()).await()
+                    val arrUsers = response?.data?.allUsers
+                    if (arrUsers != null) {
+                        val userEmail = bindingLogin.etUserName.text.toString()
+                        val userPass = bindingLogin.etPassword.text.toString()
+                        var found = false
+                        for (user in arrUsers){
+                            println("test: ${user?.mail == userEmail && user?.password == userPass} " +
+                                    " email ${user?.mail} password ${user?.password}")
+                            if(user?.mail == userEmail && user?.password == userPass){
+                                found = true
+                                val i = Intent(ctx, MapsActivity::class.java)
+                                startActivity(i)
+                                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+                                finish()
+                            }
+                        }
+                        if (!found){
+                            Toast.makeText(ctx, "No se encontro el usuario", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    println("Responsee ${arrUsers}")
+                }  catch (e: Exception){
+                    println("exception $e")
+                }
+            }
         }else {
-
+            Toast.makeText(ctx, "Tienes que llenar todos los campos", Toast.LENGTH_SHORT).show()
         }
     }
 }
