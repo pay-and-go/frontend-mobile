@@ -7,6 +7,8 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +16,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PayAndGo">
-        <activity android:name=".SplashScreenActivity"
+        android:theme="@style/Theme.PayAndGo"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/SplashScreenTheme.PayAndGo" ></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/SplashScreenTheme.PayAndGo" />
+        <activity
+            android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,8 +46,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>
