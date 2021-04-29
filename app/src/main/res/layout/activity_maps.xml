@@ -27,7 +27,6 @@
         android:layout_alignParentBottom="true"
         >
 
-
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,64 +53,64 @@
         android:layout_marginBottom="55dp"
         app:backgroundTint="#FFFFFF"
         tools:ignore="BottomAppBar"
-        />
+        >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="145dp"
-        android:layout_marginEnd="146dp"
-        android:layout_marginBottom="215dp"
-        android:text="Destinos Recientes"
-        android:textAlignment="center" />
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="322dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="240dp"
-        android:ems="10"
-        android:hint="¿A dónde quieres ir?"
-        android:inputType="textPersonName" />
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar4"
+    <RelativeLayout
         style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="298dp"
-        android:layout_height="41dp"
-        android:layout_alignBottom="@+id/bottomAppBar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="39dp"
-        android:layout_marginEnd="41dp"
-        android:layout_marginBottom="25dp"
-        app:backgroundTint="#C5C5C5"
-        tools:ignore="BottomAppBar"/>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar2"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="298dp"
-        android:layout_height="41dp"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="153dp"
-        app:backgroundTint="#C5C5C5"
-        tools:ignore="BottomAppBar" />
+        android:layout_gravity="start"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="-2dp"
+        android:layout_marginBottom="55dp"
+        app:background="@color/white"
+        tools:ignore="BottomAppBar">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="144dp"
+            android:text="Destinos Recientes"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="322dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:hint="¿A dónde quieres ir?"
+            android:inputType="textPersonName" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRoouteListInMap"
+            android:layout_width="match_parent"
+            android:layout_height="508dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="0dp"
+            android:clipToPadding="false"
+            android:padding="1dp"
+            tools:listitem="@layout/item_route"/>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

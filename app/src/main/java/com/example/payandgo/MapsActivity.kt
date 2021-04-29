@@ -1,6 +1,7 @@
 package com.example.payandgo
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.apollographql.apollo.ApolloCall
+import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.coroutines.await
+import com.apollographql.apollo.exception.ApolloException
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -15,8 +22,19 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import com.example.payandgo.type.RouteIdInput
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
+
+    val routes = listOf(
+        Route("Bogotá", "Medellín", "Viaje Bog-Med"),
+        Route("Bogotá", "Cali", "Viaje Bog-Cal"),
+        Route("Bogotá", "Cartagena", "Viaje Bog-Car")
+    )
 
     private lateinit var map: GoogleMap
 
@@ -27,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+        initRecycler(this)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -115,5 +134,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     override fun onMyLocationClick(p0: Location) {
         Toast.makeText(this, "Estas en ${p0.latitude}, ${p0.longitude}", Toast.LENGTH_SHORT).show()
+        createMarker(p0.latitude, p0.longitude, "Origen")
+    }
+
+    lateinit var mRecyclerView : RecyclerView
+    val mAdapter : RouteAdapter = RouteAdapter(routes)
+
+    fun initRecycler(ctx: Context){
+
+
+        CoroutineScope(Dispatchers.IO).launch{
+            try {
+                val response = apolloClient.query(RouteByIdQuery(RouteIdInput("RT01"))).await()
+                println("respuesta ${response?.data?.routeById?.startCity}")
+
+            }catch (e: Exception){
+                println("*****Error $e")
+            }
+        }
+
+        mRecyclerView = findViewById(R.id.rvRoouteListInMap) as RecyclerView
+        mRecyclerView.setHasFixedSize(true)
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mAdapter.RouteAdapter(routes as MutableList<Route>, this)
+        mRecyclerView.adapter = mAdapter
     }
 }
