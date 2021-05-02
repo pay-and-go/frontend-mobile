@@ -7,7 +7,8 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -18,17 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PayAndGo"
         android:usesCleartextTraffic="true">
+        <activity android:name=".InRouteActivity"></activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/SplashScreenTheme.PayAndGo" />
         <activity android:name=".RoutePlanningActivity">
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
         </activity>
-        <activity android:name=".RegisterActivity"
-            android:theme="@style/SplashScreenTheme.PayAndGo" ></activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />

@@ -2,6 +2,7 @@ package com.example.payandgo
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var bindingLogin: ActivityLoginBinding
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,11 @@ class LoginActivity : AppCompatActivity() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         bindingLogin.buttonLogin.setOnClickListener {
-            accessToInfo(this)
+//            accessToInfo(this)
+            val i = Intent(this, InRouteActivity::class.java)
+            startActivity(i)
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+            finish()
         }
 
         bindingLogin.register.setOnClickListener {

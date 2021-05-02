@@ -1,15 +1,16 @@
 package com.example.payandgo
 
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Bundle
 import android.os.Handler
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
