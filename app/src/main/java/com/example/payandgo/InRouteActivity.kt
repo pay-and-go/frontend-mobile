@@ -8,14 +8,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,11 +24,12 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.payandgo.databinding.ActivityInRouteBinding
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.ArrayList
 
 
 class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -263,9 +262,14 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        val location1 = LatLng(4.606004, -74.101538)
+        val location2 = LatLng(6.258191, -75.575722)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (checkPermission(permissions)){
                 enableUserLocation()
+                val URL = getDirectionUrl(location1,location2)
+                println("GoogleMap URL : $URL")
+                GetDirection(URL).execute()
 //                zoomToUserLocation()
             }else {
                 requestPermissions(permissions, PERMISSION_REQUEST)
@@ -288,7 +292,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
             //User the previously created marker
             userLocationMarker?.position = position
             userLocationMarker?.rotation = location.bearing
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,17f))
+//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,17f))
         }
     }
 
@@ -357,7 +361,86 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun getDirectionUrl() {
+    fun getDirectionUrl(origin: LatLng, dest: LatLng): String {
+        return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${dest.latitude},${dest.longitude}&key=AIzaSyDo7sKo0TqTd3IFySC7osydHTi1Kyrammo"
+    }
 
+    inner class GetDirection(var url:String): AsyncTask<Void,Void,List<List<LatLng>>>(){
+        override fun doInBackground(vararg params: Void?): List<List<LatLng>>? {
+            val client = OkHttpClient()
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).execute()
+            val data = response.body()!!.string()
+            val result = ArrayList<List<LatLng>>()
+            try {
+                val respObj = Gson().fromJson(data,GoogleMapDTO::class.java)
+
+                val path = ArrayList<LatLng>()
+
+                for (i in 0 until respObj.routes[0].legs[0].steps.size){
+//                    val startLatLng = LatLng(respObj.routes[0].legs[0].steps[i].start_location.lat.toDouble(),
+//                            respObj.routes[0].legs[0].steps[i].start_location.lng.toDouble())
+//                    path.add(startLatLng)
+//                    val endLatLng = LatLng(respObj.routes[0].legs[0].steps[i].end_location.lat.toDouble(),
+//                            respObj.routes[0].legs[0].steps[i].end_location.lng.toDouble())
+//                    path.add(endLatLng)
+                    path.addAll(decodePolyline(respObj.routes[0].legs[0].steps[i].polyline.points))
+                }
+                result.add(path)
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+            return result
+        }
+
+        override fun onPostExecute(result: List<List<LatLng>>) {
+            val lineoption = PolylineOptions()
+            for (i in result.indices){
+                lineoption.addAll(result[i])
+                lineoption.width(10f)
+                lineoption.color(Color.BLUE)
+                lineoption.geodesic(true)
+            }
+            mMap.addPolyline(lineoption)
+        }
+
+    }
+
+
+    fun decodePolyline(encoded: String): List<LatLng> {
+
+        val poly = ArrayList<LatLng>()
+        var index = 0
+        val len = encoded.length
+        var lat = 0
+        var lng = 0
+
+        while (index < len) {
+            var b: Int
+            var shift = 0
+            var result = 0
+            do {
+                b = encoded[index++].toInt() - 63
+                result = result or (b and 0x1f shl shift)
+                shift += 5
+            } while (b >= 0x20)
+            val dlat = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            lat += dlat
+
+            shift = 0
+            result = 0
+            do {
+                b = encoded[index++].toInt() - 63
+                result = result or (b and 0x1f shl shift)
+                shift += 5
+            } while (b >= 0x20)
+            val dlng = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            lng += dlng
+
+            val latLng = LatLng((lat.toDouble() / 1E5),(lng.toDouble() / 1E5))
+            poly.add(latLng)
+        }
+
+        return poly
     }
 }
