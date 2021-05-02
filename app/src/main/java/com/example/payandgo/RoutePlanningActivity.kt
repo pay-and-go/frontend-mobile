@@ -73,7 +73,7 @@ class RoutePlanningActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, addressSta.latitude.toString() + " " + addressSta.longitude, Toast.LENGTH_LONG).show()
 //                Toast.makeText(applicationContext, addressDes.latitude.toString() + " " + addressDes.longitude, Toast.LENGTH_LONG).show()
 
-                val i = Intent(this, MapsActivity::class.java)
+                val i = Intent(this, InRouteActivity::class.java)
                 i.putExtra("latLngOrigen",latLngSta)
                 i.putExtra("latLngDestino",latLngDes)
                 startActivity(i)
