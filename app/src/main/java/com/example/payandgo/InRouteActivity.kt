@@ -21,12 +21,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.apollographql.apollo.coroutines.await
 import com.example.payandgo.databinding.ActivityInRouteBinding
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.ArrayList
@@ -37,24 +41,20 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     //To get Location
     private var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     private val PERMISSION_REQUEST = 10
-    lateinit var locationManager: LocationManager
-    private var hasGPS = false
-    private var hasNetwork = false
-    private var locationGPS: Location? = null
-    private var locationNetwork: Location? = null
     //To create notification
     private val CHANNEL_ID = "channel_location"
     private var notificationId = 100
     //for maps
     private lateinit var mMap: GoogleMap
     private lateinit var geocoder:Geocoder
-    private  val ACCESS_LOCATION_REQUEST_CODE = 1001
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private var userLocationMarker: Marker? = null
+    private var firstLocation = true
     private lateinit var locationStart: LatLng
     private lateinit var locationEnd: LatLng
+    private var latence = 1
 
 
     //Others
@@ -71,6 +71,15 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        try{
+            val objetoIntent: Intent=intent
+            locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
+            locationEnd  = objetoIntent.getParcelableExtra("latLngDestino")
+            println("origennnnn $locationStart")
+            println("destinoooo $locationEnd")
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
         geocoder = Geocoder(this)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -84,161 +93,54 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
                 println("onLocationResult ${locationResult.lastLocation}")
                 if(mMap != null){
                     setUserLocationMarker(locationResult.lastLocation)
+                    if (firstLocation && locationStart!= null){
+                        val location = LatLng(locationResult.lastLocation.latitude,locationResult.lastLocation.longitude)
+                        val URL = getDirectionUrl(location,locationStart)
+                        println("GoogleMap URL : $URL")
+                        GetDirection(URL).execute()
+                        firstLocation = false
+                    }
                 }
+                if (latence % 3 == 0){
+                    val actualLocation = LatLng(locationResult.lastLocation.latitude,locationResult.lastLocation.longitude)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val response = apolloClient.mutate(FindTollMutation(actualLocation.latitude,actualLocation.latitude)).await()
+                            println("respuesta ${response.data?.findToll?.distance}")
+                            if (response.data?.findToll?.distance!! < 5000){
+                                sendNotification()
+                            }
+                        }  catch (e: Exception){
+                            e.printStackTrace()
+                        }
+                    }
+                    latence = 1
+                }
+                latence++
+
             }
         }
             //Handler for the repeating code
         locHandler = Handler()
         //Notification Channel for the notifications
         createNotificationChannel()
-        disableView()
         mContext = this
-        bindingInRouteActivity.btnStopLocation.setOnClickListener { stopGetLocation() }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkPermission(permissions)){
-                enableView(this)
-            }else {
+        bindingInRouteActivity.btnStopLocation.setOnClickListener { super.onBackPressed() }
+    }
+
+    private fun checkPermission(){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ){
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 requestPermissions(permissions, PERMISSION_REQUEST)
             }
         }
-
-        try{
-            val objetoIntent: Intent=intent
-            locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
-            locationEnd  = objetoIntent.getParcelableExtra("latLngDestino")
-
-            println("origennnnn $locationStart")
-            println("destinoooo $locationEnd")
-        }catch (e: Exception){
-            e.printStackTrace()
-        }
-    }
-
-    private fun disableView(){
-        bindingInRouteActivity.btnStartLocation.isEnabled = false
-        bindingInRouteActivity.btnStartLocation.alpha = 0.5F
-    }
-
-    private fun enableView(ctx: Context){
-        bindingInRouteActivity.btnStartLocation.isEnabled = true
-        bindingInRouteActivity.btnStartLocation.alpha = 1F
-        bindingInRouteActivity.btnStartLocation.setOnClickListener {
-            startGetLocation(ctx)
-        }
-        Toast.makeText(this, "Hecho", Toast.LENGTH_SHORT).show()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLocation(){
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        hasGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (hasGPS || hasNetwork){
-            if (hasGPS){
-                println("tiene GPS")
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object : LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationGPS = location
-                        }
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                    }
-
-                    override fun onProviderEnabled(provider: String?) {
-                    }
-
-                    override fun onProviderDisabled(provider: String?) {
-                    }
-
-                })
-
-                val localGPSlocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (localGPSlocation != null){
-                    locationGPS = localGPSlocation
-                }
-            }
-            if (hasNetwork){
-                println("tiene Network")
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object : LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationNetwork = location
-                        }
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                    }
-
-                    override fun onProviderEnabled(provider: String?) {
-                    }
-
-                    override fun onProviderDisabled(provider: String?) {
-                    }
-
-                })
-
-                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (localNetworkLocation != null){
-                    locationNetwork = localNetworkLocation
-                }
-            }
-            if (locationGPS != null && locationNetwork != null){
-                if(locationGPS!!.accuracy > locationNetwork!!.accuracy){
-                    println("Network latitud ${locationNetwork!!.latitude}")
-                    println("Network longitud ${locationNetwork!!.longitude}")
-                    bindingInRouteActivity.txtLocation.append("\n Network")
-                    bindingInRouteActivity.txtLocation.append("\n Latitud " + locationNetwork!!.latitude)
-                    bindingInRouteActivity.txtLocation.append("\n Longitud " + locationNetwork!!.longitude)
-                }else {
-                    println("GPS latitud ${locationGPS!!.latitude}")
-                    println("GPS longitud ${locationGPS!!.longitude}")
-                    bindingInRouteActivity.txtLocation.append("\n GPS")
-                    bindingInRouteActivity.txtLocation.append("\n Latitud " + locationGPS!!.latitude)
-                    bindingInRouteActivity.txtLocation.append("\n Longitud " + locationGPS!!.longitude)
-                }
-            }
-        }else{
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-        }
-    }
-
-    private fun checkPermission(permissionArray: Array<String>):Boolean {
-        var allSuccess = true
-        for (i in permissionArray.indices){
-            if (checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED){
-                allSuccess = false
-            }
-        }
-        return allSuccess
-    }
-
-    private var notRunnable = object: Runnable {
-        override  fun run() {
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    try {
-//                        val response = apolloClient.mutate(FindTollMutation(-25.0,73.0)).await()
-//                        println("respuesta ${response.data?.findToll?.distance}")
-//                        //if distance < x create notification
-//                    }  catch (e: Exception){
-//                        println("exception $e")
-//                    }
-//                }
-            Toast.makeText(mContext, "Texto prueba", Toast.LENGTH_SHORT)
-            getLocation()
-            sendNotification()
-            locHandler.postDelayed(this, 5000)
-        }
-    }
-
-    private fun startGetLocation(ctx: Context) {
-        mContext = ctx
-        notRunnable.run()
-    }
-
-    private fun stopGetLocation() {
-        locHandler.removeCallbacks(notRunnable)
     }
 
     private fun createNotificationChannel() {
@@ -258,6 +160,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        Toast.makeText(this, "Texto prueba", Toast.LENGTH_SHORT)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
@@ -274,18 +177,12 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkPermission(permissions)){
-                enableUserLocation()
-                if (locationStart != null && locationEnd != null){
-                    val URL = getDirectionUrl(locationStart,locationEnd)
-                    println("GoogleMap URL : $URL")
-                    GetDirection(URL).execute()
-                }
-//                zoomToUserLocation()
-            }else {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
+        checkPermission()
+        enableUserLocation()
+        if (locationStart != null && locationEnd != null){
+            val URL = getDirectionUrl(locationStart,locationEnd)
+            println("GoogleMap URL : $URL")
+            GetDirection(URL).execute()
         }
     }
 
@@ -309,17 +206,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startLocationUpdates(){
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            return
-        }
+        checkPermission()
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
     }
 
@@ -329,14 +216,8 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkPermission(permissions)){
-                startLocationUpdates()
-            }else {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
-        }
-
+        checkPermission()
+        startLocationUpdates()
     }
 
     override fun onStop() {
@@ -345,32 +226,8 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun enableUserLocation(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkPermission(permissions)){
-                mMap.isMyLocationEnabled = true
-            }else {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
-        }
-
-    }
-
-    private fun zoomToUserLocation(){
-        var locationTask:Task<Location>
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkPermission(permissions)){
-                locationTask = fusedLocationProviderClient.lastLocation
-                locationTask.addOnSuccessListener {location: Location? ->
-                    location?.let {
-                        val position = LatLng(location.latitude,location.longitude)
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,20f))
-
-                    }
-                }
-            }else {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
-        }
+        checkPermission()
+        mMap.isMyLocationEnabled = true
     }
 
     fun getDirectionUrl(origin: LatLng, dest: LatLng): String {
