@@ -53,6 +53,8 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private var userLocationMarker: Marker? = null
+    private lateinit var locationStart: LatLng
+    private lateinit var locationEnd: LatLng
 
 
     //Others
@@ -84,7 +86,6 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
                     setUserLocationMarker(locationResult.lastLocation)
                 }
             }
-
         }
             //Handler for the repeating code
         locHandler = Handler()
@@ -99,6 +100,17 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
             }else {
                 requestPermissions(permissions, PERMISSION_REQUEST)
             }
+        }
+
+        try{
+            val objetoIntent: Intent=intent
+            locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
+            locationEnd  = objetoIntent.getParcelableExtra("latLngDestino")
+
+            println("origennnnn $locationStart")
+            println("destinoooo $locationEnd")
+        }catch (e: Exception){
+            e.printStackTrace()
         }
     }
 
@@ -262,14 +274,14 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val location1 = LatLng(4.606004, -74.101538)
-        val location2 = LatLng(6.258191, -75.575722)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (checkPermission(permissions)){
                 enableUserLocation()
-                val URL = getDirectionUrl(location1,location2)
-                println("GoogleMap URL : $URL")
-                GetDirection(URL).execute()
+                if (locationStart != null && locationEnd != null){
+                    val URL = getDirectionUrl(locationStart,locationEnd)
+                    println("GoogleMap URL : $URL")
+                    GetDirection(URL).execute()
+                }
 //                zoomToUserLocation()
             }else {
                 requestPermissions(permissions, PERMISSION_REQUEST)
@@ -387,6 +399,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
                     path.addAll(decodePolyline(respObj.routes[0].legs[0].steps[i].polyline.points))
                 }
                 result.add(path)
+                println("Tamañooooooo: ${respObj.routes[0].legs[0].steps.size}")
             }catch (e: Exception){
                 e.printStackTrace()
             }
@@ -405,7 +418,6 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
     }
-
 
     fun decodePolyline(encoded: String): List<LatLng> {
 

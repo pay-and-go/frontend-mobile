@@ -59,18 +59,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         buttonVerPeajes = findViewById(R.id.buttonVerPeajes)
         buttonVerPeajes.setOnClickListener { onClickButtonVerPeajes() }
-
-        try{
-            val objetoIntent: Intent=intent
-            var origen: LatLng = objetoIntent.getParcelableExtra("latLngOrigen")
-            var destino: LatLng = objetoIntent.getParcelableExtra("latLngDestino")
-
-            println("origennnnn $origen")
-            println("destinoooo $destino")
-        }catch (e: Exception){
-
-        }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -94,10 +82,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
+    private fun checkPermission(){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ){
+            requestLocationPermission()
+        }
+    }
+
     private fun enableLocation() {
         if (!::map.isInitialized) return
 
         if (isLocationPermissionGranted()) {
+            checkPermission()
             map.isMyLocationEnabled = true
         } else {
             requestLocationPermission()
@@ -127,6 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     ) {
         when (requestCode) {
             REQUEST_CODE_LOCATION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                checkPermission()
                 map.isMyLocationEnabled = true
             } else {
                 Toast.makeText(
@@ -144,6 +147,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         super.onResumeFragments()
         if (!::map.isInitialized) return
         if (!isLocationPermissionGranted()) {
+            checkPermission()
             map.isMyLocationEnabled = false
             Toast.makeText(
                 this,

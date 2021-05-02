@@ -48,7 +48,7 @@ class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewH
                 val latLngSta = LatLng(route.latStart, route.lngStart)
                 val latLngDes = LatLng(route.latArrival, route.lngArrival)
 
-                val i = Intent(context, MapsActivity::class.java)
+                val i = Intent(context, InRouteActivity::class.java)
                 i.putExtra("latLngOrigen",latLngSta)
                 i.putExtra("latLngDestino",latLngDes)
                 context.startActivity(i)
