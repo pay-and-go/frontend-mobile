@@ -23,6 +23,8 @@
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
+        <activity android:name=".RoutePlanningActivity">
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
@@ -49,7 +51,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"></activity>
+
     </application>
 
 </manifest>
