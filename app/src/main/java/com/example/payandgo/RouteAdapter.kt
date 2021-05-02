@@ -1,12 +1,15 @@
 package com.example.payandgo
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 
 class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewHolder>(){
 
@@ -39,8 +42,21 @@ class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewH
         fun bind(route:Route, context: Context){
             startCity.text = route.startCity
             arrivalCity.text = route.arrivalCity
-            description.text = route.description
-            itemView.setOnClickListener(View.OnClickListener { Toast.makeText(context, route.description, Toast.LENGTH_SHORT).show() })
+            description.text = route.date
+            itemView.setOnClickListener(View.OnClickListener {
+                //Toast.makeText(context, route.date, Toast.LENGTH_SHORT).show()
+                val latLngSta = LatLng(route.latStart, route.lngStart)
+                val latLngDes = LatLng(route.latArrival, route.lngArrival)
+
+                val i = Intent(context, MapsActivity::class.java)
+                i.putExtra("latLngOrigen",latLngSta)
+                i.putExtra("latLngDestino",latLngDes)
+                context.startActivity(i)
+            })
         }
+    }
+
+    private fun sendDatatoMap(route: Route) {
+
     }
 }

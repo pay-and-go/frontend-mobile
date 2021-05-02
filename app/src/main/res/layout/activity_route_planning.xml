@@ -7,7 +7,7 @@
     tools:context=".RoutePlanningActivity">
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/editTextStart"
         android:layout_width="287dp"
         android:layout_height="42dp"
         android:layout_alignParentStart="true"
@@ -18,31 +18,27 @@
         android:layout_marginTop="31dp"
         android:layout_marginEnd="62dp"
         android:ems="10"
+        android:hint="¿Desde qué ciudad sales?"
         android:inputType="textPersonName"
-        android:text="Ubicación actual"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColorHint="@color/orange"
-        android:textColorHighlight="@color/purple_500"
-        android:textColorLink="@color/orange"
-        android:shadowColor="@color/orange"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/editTextDestination2"
         android:layout_width="287dp"
         android:layout_height="42dp"
-        android:layout_below="@+id/editTextTextPersonName2"
+        android:layout_below="@+id/editTextStart"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="57dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="¿A dónde quieres ir?"
+        android:hint="¿A qué ciudad quieres ir?"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextStart" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRoouteList"
@@ -59,7 +55,7 @@
         tools:listitem="@layout/item_route" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonPlanear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

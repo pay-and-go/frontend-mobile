@@ -84,7 +84,8 @@
             android:textAlignment="center" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editTextDestination"
+            android:focusable="false"
             android:layout_width="322dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
