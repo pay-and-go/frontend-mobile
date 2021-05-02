@@ -36,7 +36,11 @@ class LoginActivity : AppCompatActivity() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         bindingLogin.buttonLogin.setOnClickListener {
-            accessToInfo(this)
+//            accessToInfo(this)
+            val i = Intent(this, InRouteActivity::class.java)
+            startActivity(i)
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+            finish()
         }
 
         bindingLogin.register.setOnClickListener {
