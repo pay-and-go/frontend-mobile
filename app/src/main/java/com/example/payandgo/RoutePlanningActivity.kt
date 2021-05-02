@@ -108,7 +108,6 @@ class RoutePlanningActivity : AppCompatActivity() {
                             }
                         }
                     }
-
                     override fun onFailure(e: ApolloException) {
                         println("****Error apolloClient $e")
                     }

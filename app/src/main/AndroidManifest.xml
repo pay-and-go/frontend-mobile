@@ -7,7 +7,7 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -19,23 +19,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PayAndGo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".InRouteActivity"></activity>
+        <activity android:name=".TollsActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".InRouteActivity" />
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
-        <activity android:name=".RoutePlanningActivity">
-        </activity>
+        <activity android:name=".RoutePlanningActivity"></activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -51,8 +60,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>
