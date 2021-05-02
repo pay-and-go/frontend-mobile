@@ -67,6 +67,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         map.setOnMyLocationClickListener(this)
         //createMarker(4.637103, -74.082823, "La Nacho")
         enableLocation()
+        val coordinates: LatLng  = LatLng(3.637103, -74.082823)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates,8f))
     }
 
     private fun createMarker(lat: Double, lng: Double, label: String) {
@@ -227,7 +229,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
     private fun onClickButtonVerPeajes() {
-        val i = Intent(this, TollsActivity::class.java)
+        // Cambio Temporal ****** dejar el que está comentado
+        //val i = Intent(this, TollsActivity::class.java)
+
+        val routeAux=  Route("Bogotá", "Medellín",
+            "2/05/2021", 4.6533326, -74.083652,
+            6.2443382, -75.573553)
+
+        val licenseOfCar = "AAA111"
+
+        val i = Intent(this, PaymentSelectedRouteActivity::class.java)
+        i.putExtra("rutaSeleccionada", routeAux)
+        i.putExtra("licenseOfCar", licenseOfCar)
         startActivity(i)
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
         finish()

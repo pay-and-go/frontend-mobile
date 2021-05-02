@@ -152,7 +152,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="80dp"
         android:layout_toEndOf="@+id/textTotalLabel"
-        android:text="$500000"
+        android:text="-"
         android:textSize="20dp" />
 
     <Button

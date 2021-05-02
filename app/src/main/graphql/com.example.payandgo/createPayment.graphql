@@ -1,0 +1,12 @@
+mutation CreatePayment ($payment: PaymentInput!) {
+    createPayment(payment: $payment) {
+        idPago,
+        fechaPago,
+        horaPago,
+        placa,
+        peaje,
+        valor,
+        created_at,
+        updated_at
+    }
+}

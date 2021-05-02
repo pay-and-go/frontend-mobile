@@ -65,7 +65,7 @@ class TollsActivity : AppCompatActivity() {
             mRecyclerView.layoutManager = LinearLayoutManager(this)
             mAdapter.TollAdapter(tolls as MutableList<Toll>, this)
             mRecyclerView.adapter = mAdapter
-        }, 1000)
+        }, 1500)
 
     }
 }
