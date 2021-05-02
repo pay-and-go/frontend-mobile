@@ -4,11 +4,13 @@ package com.example.payandgo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Handler
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -25,6 +27,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.tabs.TabItem
+import com.google.android.material.tabs.TabLayout
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
@@ -32,12 +36,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     var routes = mutableListOf<Route>()
 
     lateinit var editTextDestination: EditText
+    lateinit var buttonVerPeajes: Button
 
     private lateinit var map: GoogleMap
 
     companion object {
         const val REQUEST_CODE_LOCATION = 0
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +56,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mapFragment.getMapAsync(this)
         editTextDestination = findViewById(R.id.editTextDestination)
         editTextDestination.setOnClickListener { onClickEditTextDestination() }
+
+        buttonVerPeajes = findViewById(R.id.buttonVerPeajes)
+        buttonVerPeajes.setOnClickListener { onClickButtonVerPeajes() }
 
         try{
             val objetoIntent: Intent=intent
@@ -207,6 +217,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     private fun onClickEditTextDestination() {
         val i = Intent(this, RoutePlanningActivity::class.java)
+        startActivity(i)
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+        finish()
+    }
+
+    private fun onClickButtonVerPeajes() {
+        val i = Intent(this, TollsActivity::class.java)
         startActivity(i)
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
         finish()
