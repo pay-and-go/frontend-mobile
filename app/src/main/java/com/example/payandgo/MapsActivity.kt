@@ -77,7 +77,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         map = googleMap
         // Add a marker in Sydney and move the camera
         map.setOnMyLocationClickListener(this)
-        createMarker(4.637103, -74.082823, "La Nacho")
+        //createMarker(4.637103, -74.082823, "La Nacho")
         enableLocation()
     }
 
@@ -155,7 +155,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     override fun onMyLocationClick(p0: Location) {
         Toast.makeText(this, "Estas en ${p0.latitude}, ${p0.longitude}", Toast.LENGTH_SHORT).show()
-        createMarker(p0.latitude, p0.longitude, "Origen")
+        //createMarker(p0.latitude, p0.longitude, "Origen")
     }
 
     lateinit var mRecyclerView: RecyclerView
