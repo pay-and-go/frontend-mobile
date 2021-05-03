@@ -1,0 +1,12 @@
+query AllRoutes {
+    allRoutes{
+        idRoute
+        startCity
+        arrivalCity
+        description
+        latitudeStart
+        longitudeStart
+        latitudeEnd
+        longitudeEnd
+    }
+}

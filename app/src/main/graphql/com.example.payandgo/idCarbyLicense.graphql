@@ -1,0 +1,5 @@
+query IdCarbyLicense($licensecar: LicensecarInput!){
+    idCarbyLicense(licensecar: $licensecar){
+        idNodeCar
+    }
+}

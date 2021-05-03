@@ -1,0 +1,5 @@
+mutation CreateRelationCarDay ($datecar: CarDay!) {
+    createRelationCarDay(datecar: $datecar) {
+        idRelationCarDate
+    }
+}

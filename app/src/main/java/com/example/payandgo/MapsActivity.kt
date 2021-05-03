@@ -230,17 +230,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     private fun onClickButtonVerPeajes() {
         // Cambio Temporal ****** dejar el que está comentado
-        //val i = Intent(this, TollsActivity::class.java)
-
-        val routeAux=  Route("Bogotá", "Medellín",
-            "2/05/2021", 4.6533326, -74.083652,
-            6.2443382, -75.573553)
-
-        val licenseOfCar = "AAA111"
-
-        val i = Intent(this, PaymentSelectedRouteActivity::class.java)
-        i.putExtra("rutaSeleccionada", routeAux)
-        i.putExtra("licenseOfCar", licenseOfCar)
+        val i = Intent(this, TollsActivity::class.java)
         startActivity(i)
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
         finish()
