@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Handler
+import android.os.Parcelable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.example.payandgo.InitApplication.Companion.prefs
 import com.example.payandgo.type.License
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,6 +36,7 @@ import com.google.android.material.tabs.TabLayout
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
 
     var routes = mutableListOf<Route>()
+    var cars = mutableListOf<String>()
 
     lateinit var editTextDestination: EditText
     lateinit var buttonVerPeajes: Button
@@ -43,7 +46,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     companion object {
         const val REQUEST_CODE_LOCATION = 0
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,8 +69,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         map.setOnMyLocationClickListener(this)
         //createMarker(4.637103, -74.082823, "La Nacho")
         enableLocation()
-        val coordinates: LatLng  = LatLng(3.637103, -74.082823)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates,8f))
+        val coordinates: LatLng = LatLng(3.637103, -74.082823)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 8f))
     }
 
     private fun createMarker(lat: Double, lng: Double, label: String) {
@@ -84,7 +86,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
-    private fun checkPermission(){
+    private fun checkPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -92,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        ){
+        ) {
             requestLocationPermission()
         }
     }
@@ -167,38 +169,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: RouteAdapter
 
-    fun initRecycler(ctx: Context) {
-//        CoroutineScope(Dispatchers.IO).launch{
-//            try {
-//                val response = apolloClient.query(RouteByIdQuery(RouteIdInput("RT01"))).await()
-//                println("respuesta ${response?.data?.routeById?.startCity}")
-//
-//            }catch (e: Exception){
-//                println("*****Error $e")
-//            }
-//        }
-
+    fun checkAllCarsOfUser() {
         try {
-            val response = apolloClient.query(RoutesByLicenseQuery(License("AAA111"))).enqueue(
-                object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
-                    override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
-                        //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
-                        val arrayRoutesAndDates = response?.data?.getDatesByLicense
+            val response = apolloClient.query(VehicleByIdUserQuery(prefs.getId())).enqueue(
+                object : ApolloCall.Callback<VehicleByIdUserQuery.Data>() {
+                    override fun onResponse(response: Response<VehicleByIdUserQuery.Data>) {
+                        val arrayCarsInformation = response?.data?.vehicleByIdUser
 
-                        if (arrayRoutesAndDates != null) {
-                            for (routeAndDate in arrayRoutesAndDates) {
-                                var date =
-                                    routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
-                                var rute = Route(
-                                    routeAndDate?.route?.startCity.toString(),
-                                    routeAndDate?.route?.arrivalCity.toString(),
-                                    date,
-                                    routeAndDate?.route?.latitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.latitudeEnd?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeEnd?.toDouble()!!
-                                )
-                                routes.add(rute)
+                        if (arrayCarsInformation != null) {
+                            for (car in arrayCarsInformation) {
+                                if (car != null) {
+                                    cars.add(car.placa)
+                                }
                             }
                         }
                     }
@@ -207,32 +189,75 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                         println("****Error apolloClient $e")
                     }
                 });
-
         } catch (e: Exception) {
             println("*****Error $e")
         }
+    }
+
+    fun initRecycler(ctx: Context) {
+        checkAllCarsOfUser()
+        //Para esperar la respuesta de la consulta anterior
         Handler().postDelayed({
-            mAdapter = RouteAdapter(routes)
-            mRecyclerView = findViewById(R.id.rvRoouteListInMap) as RecyclerView
-            mRecyclerView.setHasFixedSize(true)
-            mRecyclerView.layoutManager = LinearLayoutManager(ctx)
-            mAdapter.RouteAdapter(routes as MutableList<Route>, ctx)
-            mRecyclerView.adapter = mAdapter
-        }, 1000)
+            for (license in cars) {
+                try {
+                    val response =
+                        apolloClient.query(RoutesByLicenseQuery(License(license))).enqueue(
+                            object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
+                                override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
+                                    //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
+                                    val arrayRoutesAndDates = response?.data?.getDatesByLicense
+
+                                    if (arrayRoutesAndDates != null) {
+                                        for (routeAndDate in arrayRoutesAndDates) {
+                                            var date =
+                                                routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
+                                            var rute = Route(
+                                                routeAndDate?.route?.startCity.toString(),
+                                                routeAndDate?.route?.arrivalCity.toString(),
+                                                date,
+                                                routeAndDate?.route?.latitudeStart?.toDouble()!!,
+                                                routeAndDate?.route?.longitudeStart?.toDouble()!!,
+                                                routeAndDate?.route?.latitudeEnd?.toDouble()!!,
+                                                routeAndDate?.route?.longitudeEnd?.toDouble()!!
+                                            )
+                                            routes.add(rute)
+                                        }
+                                    }
+                                }
+
+                                override fun onFailure(e: ApolloException) {
+                                    println("****Error apolloClient $e")
+                                }
+                            });
+                } catch (e: Exception) {
+                    println("*****Error $e")
+                }
+
+            }
+            Handler().postDelayed({
+                mAdapter = RouteAdapter(routes)
+                mRecyclerView = findViewById(R.id.rvRoouteListInMap) as RecyclerView
+                mRecyclerView.setHasFixedSize(true)
+                mRecyclerView.layoutManager = LinearLayoutManager(ctx)
+                mAdapter.RouteAdapter(routes as MutableList<Route>, ctx)
+                mRecyclerView.adapter = mAdapter
+            }, 1500)
+
+        }, 800)
     }
 
     private fun onClickEditTextDestination() {
         val i = Intent(this, RoutePlanningActivity::class.java)
+        i.putExtra("listaDeRutas", ArrayList<Parcelable>(routes))
         startActivity(i)
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
 
     private fun onClickButtonVerPeajes() {
-        // Cambio Temporal ****** dejar el que está comentado
         val i = Intent(this, TollsActivity::class.java)
         startActivity(i)
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
 
