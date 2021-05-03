@@ -44,13 +44,11 @@ class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewH
             arrivalCity.text = route.arrivalCity
             description.text = route.date
             itemView.setOnClickListener(View.OnClickListener {
-                //Toast.makeText(context, route.date, Toast.LENGTH_SHORT).show()
-                val latLngSta = LatLng(route.latStart, route.lngStart)
-                val latLngDes = LatLng(route.latArrival, route.lngArrival)
+                val licenseOfCar = "AAA111"
 
-                val i = Intent(context, InRouteActivity::class.java)
-                i.putExtra("latLngOrigen",latLngSta)
-                i.putExtra("latLngDestino",latLngDes)
+                val i = Intent(context, PaymentSelectedRouteActivity::class.java)
+                i.putExtra("rutaSeleccionada", route)
+                i.putExtra("licenseOfCar", licenseOfCar)
                 context.startActivity(i)
             })
         }

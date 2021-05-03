@@ -58,27 +58,22 @@ class RoutePlanningActivity : AppCompatActivity() {
                 try {
                     addressListSta = geoCoder.getFromLocationName(locationSta, 1)
                     addressListDes = geoCoder.getFromLocationName(locationDes, 1)
+                    val addressSta = addressListSta!![0]
+                    val addressDes = addressListDes!![0]
+
+                    val licenseOfCar = "AAA111"
+
+                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
+                    val route =  Route(locationSta, locationDes,
+                        "2/05/2021", addressSta.latitude, addressSta.longitude,
+                        addressDes.latitude, addressDes.longitude)
+                    i.putExtra("rutaSeleccionada", route)
+                    i.putExtra("licenseOfCar", licenseOfCar)
+                    startActivity(i)
 
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-
-                val addressSta = addressListSta!![0]
-                val addressDes = addressListDes!![0]
-                val latLngSta = LatLng(addressSta.latitude, addressSta.longitude)
-                val latLngDes = LatLng(addressDes.latitude, addressDes.longitude)
-//                println("aaaaa $addressSta")
-//                println("aaaaa ${addressSta.getAddressLine(0)}")
-//                println("aaaaa ${addressDes.getAddressLine(0)}")
-//                Toast.makeText(applicationContext, addressSta.latitude.toString() + " " + addressSta.longitude, Toast.LENGTH_LONG).show()
-//                Toast.makeText(applicationContext, addressDes.latitude.toString() + " " + addressDes.longitude, Toast.LENGTH_LONG).show()
-
-                val i = Intent(this, InRouteActivity::class.java)
-                i.putExtra("latLngOrigen",latLngSta)
-                i.putExtra("latLngDestino",latLngDes)
-                startActivity(i)
-                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
-                finish()
             }
         }
     }

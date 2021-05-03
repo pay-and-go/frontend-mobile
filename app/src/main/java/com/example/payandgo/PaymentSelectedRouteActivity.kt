@@ -16,6 +16,7 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.example.payandgo.type.*
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,7 +66,11 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             Toast.makeText(ctx, "Pago Creado", Toast.LENGTH_SHORT).show()
-            val i = Intent(this, MapsActivity::class.java)
+            val i = Intent(this, InRouteActivity::class.java)
+            val latLngSta = LatLng(route.latStart, route.lngStart)
+            val latLngDes = LatLng(route.latArrival, route.lngArrival)
+            i.putExtra("latLngOrigen",latLngSta)
+            i.putExtra("latLngDestino",latLngDes)
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()

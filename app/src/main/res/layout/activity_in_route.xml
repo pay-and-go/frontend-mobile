@@ -31,18 +31,11 @@
             android:text="Tu ubicación es"/>
 
         <Button
-            android:id="@+id/btnStartLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="Obtener Ubicación"/>
-
-        <Button
             android:id="@+id/btnStopLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Detener Notificaciones"/>
+            android:text="QR"/>
 
     </LinearLayout>
 
