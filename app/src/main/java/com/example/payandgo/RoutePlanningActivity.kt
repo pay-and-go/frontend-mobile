@@ -56,8 +56,8 @@ class RoutePlanningActivity : AppCompatActivity() {
             else{
                 val geoCoder = Geocoder(this)
                 try {
-                    addressListSta = geoCoder.getFromLocationName(locationSta, 1)
-                    addressListDes = geoCoder.getFromLocationName(locationDes, 1)
+                    addressListSta = geoCoder.getFromLocationName(locationSta+", Colombia", 1)
+                    addressListDes = geoCoder.getFromLocationName(locationDes+", Colombia", 1)
                     val addressSta = addressListSta!![0]
                     val addressDes = addressListDes!![0]
 

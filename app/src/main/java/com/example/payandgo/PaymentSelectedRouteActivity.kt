@@ -1,13 +1,14 @@
 package com.example.payandgo
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
@@ -23,7 +24,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class PaymentSelectedRouteActivity : AppCompatActivity() {
+
+    var progressDialog: ProgressDialog? = null
 
     var dayOfTodayDate: Int = 0
     var monthOfTodayDate: Int = 0
@@ -64,17 +68,23 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
         agregarPago(ctx)
         agregarRelacionesRuta()
 
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setIcon(R.mipmap.ic_launcher)
+        progressDialog!!.setMessage("Cargando...")
+        progressDialog!!.show()
+
         Handler().postDelayed({
+            progressDialog!!.dismiss()
             Toast.makeText(ctx, "Pago Creado", Toast.LENGTH_SHORT).show()
             val i = Intent(this, InRouteActivity::class.java)
             val latLngSta = LatLng(route.latStart, route.lngStart)
             val latLngDes = LatLng(route.latArrival, route.lngArrival)
-            i.putExtra("latLngOrigen",latLngSta)
-            i.putExtra("latLngDestino",latLngDes)
+            i.putExtra("latLngOrigen", latLngSta)
+            i.putExtra("latLngDestino", latLngDes)
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
-        }, 5500)
+        }, 6000)
     }
 
     private fun agregarPago(ctx: Context) {
@@ -140,11 +150,10 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             } else {
                 nuevoUltimoIdRuta = "RT$numero"
             }
-        }, 1800)
+        }, 2000)
     }
 
     private fun agregarRuta() {
-        obtenerUltimoIdRuta()
         Handler().postDelayed({
             //println("********* $nuevoUltimoIdRuta")
             var description =
@@ -188,7 +197,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
 
     private fun crearRelaccionDiaRuta() {
         val createRelaccionDiaRutaMutation = CreateRelationDayRouteMutation(
-            DayRoute(idNodoRoute,idNodoDay)
+            DayRoute(idNodoRoute, idNodoDay)
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -204,7 +213,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
 
     private fun crearRelaccionCarroDia() {
         val createRelaccionCarroDiaMutation = CreateRelationCarDayMutation(
-            CarDay(idNodoCar,idNodoDay)
+            CarDay(idNodoCar, idNodoDay)
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -221,7 +230,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
     private fun agregarDia() {
         val createDayMutation = CreateDayMutation(
             DateInput(
-                dayOfTodayDate,monthOfTodayDate,yearOfTodayDate
+                dayOfTodayDate, monthOfTodayDate, yearOfTodayDate
             )
         )
 
@@ -262,13 +271,13 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
         textArrivalCitySelected.text = route.arrivalCity
 
         val day = SimpleDateFormat("dd")
-        val dayOfTodayDate = day.format(Date())
+        dayOfTodayDate = day.format(Date()).toInt()
 
         val month = SimpleDateFormat("M")
-        val monthOfTodayDate = month.format(Date())
+        monthOfTodayDate = month.format(Date()).toInt()
 
         val year = SimpleDateFormat("yyyy")
-        val yearOfTodayDate = year.format(Date())
+        yearOfTodayDate = year.format(Date()).toInt()
 
         textTodayDate.text =
             dayOfTodayDate.toString() + "/" + monthOfTodayDate.toString() + "/" + yearOfTodayDate.toString()
@@ -335,7 +344,16 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             println("*****Error $e")
         }
 
+        //Se demora bastante - por eso se llama desde acá
+        obtenerUltimoIdRuta()
+
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setIcon(R.mipmap.ic_launcher)
+        progressDialog!!.setMessage("Cargando...")
+        progressDialog!!.show()
+
         Handler().postDelayed({
+            progressDialog!!.dismiss()
             val textTotalBalance = view.findViewById(R.id.textTotalBalance) as TextView
             textTotalBalance.text = "$" + getSumPricesTolls().toString()
             mAdapter = TollAdapter(tolls)
@@ -344,7 +362,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             mRecyclerView.layoutManager = LinearLayoutManager(this)
             mAdapter.TollAdapter(tolls as MutableList<Toll>, this)
             mRecyclerView.adapter = mAdapter
-        }, 1500)
+        }, 2000)
 
     }
 }
