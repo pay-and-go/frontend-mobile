@@ -15,7 +15,10 @@ import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
+import com.example.payandgo.models.Route
+import com.example.payandgo.models.Toll
 import com.example.payandgo.type.*
+import com.example.payandgo.utils.TollAdapter
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

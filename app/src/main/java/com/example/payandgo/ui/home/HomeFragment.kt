@@ -3,7 +3,6 @@ package com.example.payandgo.ui.home
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -22,8 +21,9 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.payandgo.*
 import com.example.payandgo.databinding.HomeFragmentBinding
+import com.example.payandgo.models.Route
 import com.example.payandgo.type.License
-import com.example.payandgo.ui.routes.RoutePlanningFragment
+import com.example.payandgo.utils.RouteAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment

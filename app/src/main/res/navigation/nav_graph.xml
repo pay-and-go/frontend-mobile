@@ -37,4 +37,19 @@
         android:name="com.example.payandgo.ui.routes.RoutePlanningFragment"
         android:label="route_planning_fragment"
         tools:layout="@layout/route_planning_fragment" />
+    <fragment
+        android:id="@+id/myCarsFragment"
+        android:name="com.example.payandgo.ui.vehicles.MyCarsFragment"
+        android:label="my_cars_fragment"
+        tools:layout="@layout/my_cars_fragment" />
+    <fragment
+        android:id="@+id/paymentSelectedRouteFragment"
+        android:name="com.example.payandgo.ui.payment.PaymentSelectedRouteFragment"
+        android:label="payment_selected_route_fragment"
+        tools:layout="@layout/payment_selected_route_fragment" />
+    <fragment
+        android:id="@+id/paymentsFragment"
+        android:name="com.example.payandgo.ui.payment.PaymentsFragment"
+        android:label="payments_fragment"
+        tools:layout="@layout/payments_fragment" />
 </navigation>

@@ -4,7 +4,6 @@ package com.example.payandgo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,15 +19,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.example.payandgo.models.Route
 import com.example.payandgo.type.License
+import com.example.payandgo.utils.RouteAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.tabs.TabItem
-import com.google.android.material.tabs.TabLayout
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {

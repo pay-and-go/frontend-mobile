@@ -1,4 +1,4 @@
-package com.example.payandgo
+package com.example.payandgo.utils
 
 import android.content.Context
 import android.content.Intent
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.model.LatLng
+import com.example.payandgo.PaymentSelectedRouteActivity
+import com.example.payandgo.R
+import com.example.payandgo.models.Route
 
 class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewHolder>(){
 
@@ -39,7 +39,7 @@ class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewH
         val startCity = view.findViewById(R.id.textStartCity) as TextView
         val arrivalCity = view.findViewById(R.id.textArrivalCity) as TextView
         val description = view.findViewById(R.id.textDescription) as TextView
-        fun bind(route:Route, context: Context){
+        fun bind(route: Route, context: Context){
             startCity.text = route.startCity
             arrivalCity.text = route.arrivalCity
             description.text = route.date

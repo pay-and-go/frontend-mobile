@@ -1,4 +1,4 @@
-package com.example.payandgo
+package com.example.payandgo.utils
 
 import android.app.Application
 

@@ -15,8 +15,9 @@ import android.location.Address
 import android.location.Geocoder
 import android.widget.Button
 import android.widget.Toast
+import com.example.payandgo.models.Route
+import com.example.payandgo.utils.RouteAdapter
 import java.io.IOException
-import com.google.android.gms.maps.model.LatLng
 
 
 class RoutePlanningActivity : AppCompatActivity() {

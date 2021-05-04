@@ -5,20 +5,20 @@
         android:icon="@drawable/ic_account"
         android:title="Cuenta"/>
 
-<!--    <item-->
-<!--        android:id="@+id/tollFragment"-->
-<!--        android:icon="@drawable/ic_payment"-->
-<!--        android:title="Pagos"/>-->
+    <item
+        android:id="@+id/paymentsFragment"
+        android:icon="@drawable/ic_payment"
+        android:title="Pagos"/>
 
 <!--    <item-->
 <!--        android:id="@+id/homeFragment"-->
 <!--        android:icon="@drawable/ic_journey"-->
 <!--        android:title="Mis Viajes"/>-->
 
-<!--    <item-->
-<!--        android:id="@+id/tollFragment"-->
-<!--        android:icon="@drawable/ic_vehicles"-->
-<!--        android:title="Mis Vehiculos"/>-->
+    <item
+        android:id="@+id/myCarsFragment"
+        android:icon="@drawable/ic_vehicles"
+        android:title="Mis Vehiculos"/>
 
     <item
         android:id="@+id/helpFragment"

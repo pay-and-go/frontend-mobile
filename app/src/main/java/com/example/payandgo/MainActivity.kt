@@ -2,6 +2,7 @@ package com.example.payandgo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -29,6 +30,13 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.homeFragment, R.id.tollFragment),
             bindingMain.drawerLayout
         )
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.homeFragment || destination.id == R.id.tollFragment) {
+                bindingMain.bottomNav.visibility = View.VISIBLE
+            } else {
+                bindingMain.bottomNav.visibility = View.GONE
+            }
+        }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         bindingMain.bottomNav.setupWithNavController(navController)
