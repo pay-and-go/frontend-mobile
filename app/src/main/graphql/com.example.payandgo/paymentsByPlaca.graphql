@@ -1,0 +1,10 @@
+query PaymentsByPlaca($licence: String!) {
+    paymentsByPlaca(placa: $licence){
+        idPago
+        fechaPago
+        horaPago
+        placa
+        peaje
+        valor
+    }
+}

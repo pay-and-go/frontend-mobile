@@ -7,6 +7,7 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,13 +21,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PayAndGo"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".PaymentSelectedRouteActivity"></activity>
         <activity android:name=".TollsActivity" />
         <activity android:name=".InRouteActivity" />
+
+        <activity android:name=".MyCarsActivity">
+
+        </activity>
+
+        <activity android:name=".TravelsActivity" />
+        <activity android:name=".PaymentsActivity">
+        </activity>
+        <activity android:name=".AccountActivity" />
+
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
+
         <activity android:name=".RoutePlanningActivity" />
         <activity
             android:name=".LoginActivity"
@@ -35,19 +48,19 @@
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+              <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+      </activity>
+      <!--
+           The API key for Google Maps-based APIs is defined as a string resource.
+           (See the file "res/values/google_maps_api.xml").
+           Note that the API key is linked to the encryption key used to sign the APK.
+           You need a different API key for each encryption key, including the release key that is used to
+           sign the APK for publishing.
+           You can define the keys for the debug and release targets in src/debug/ and src/release/.
+      -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

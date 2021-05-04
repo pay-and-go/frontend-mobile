@@ -36,12 +36,25 @@
         android:id="@+id/routePlanningFragment"
         android:name="com.example.payandgo.ui.routes.RoutePlanningFragment"
         android:label="route_planning_fragment"
-        tools:layout="@layout/route_planning_fragment" />
+        tools:layout="@layout/route_planning_fragment" >
+        <argument
+            android:name="argRoutes"
+            app:argType="com.example.payandgo.models.Route[]" />
+        <action
+            android:id="@+id/action_routePlanningFragment_to_myCarsFragment"
+            app:destination="@id/myCarsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/myCarsFragment"
         android:name="com.example.payandgo.ui.vehicles.MyCarsFragment"
         android:label="my_cars_fragment"
-        tools:layout="@layout/my_cars_fragment" />
+        tools:layout="@layout/my_cars_fragment" >
+        <argument
+            android:name="safeRoute"
+            app:argType="com.example.payandgo.models.Route" />
+    </fragment>
     <fragment
         android:id="@+id/paymentSelectedRouteFragment"
         android:name="com.example.payandgo.ui.payment.PaymentSelectedRouteFragment"

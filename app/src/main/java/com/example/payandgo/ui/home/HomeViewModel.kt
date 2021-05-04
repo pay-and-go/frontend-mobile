@@ -5,4 +5,5 @@ import com.example.payandgo.models.Route
 
 class HomeViewModel : ViewModel() {
     var routes = mutableListOf<Route>()
+    var cars = mutableListOf<String>()
 }

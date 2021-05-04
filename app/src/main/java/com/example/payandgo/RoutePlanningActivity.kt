@@ -31,6 +31,14 @@ class RoutePlanningActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_route_planning)
+
+        try {
+            val objetoIntent: Intent = intent
+            routes = objetoIntent.getParcelableArrayListExtra<Route>("listaDeRutas")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         initRecycler()
         buttonPlanear = findViewById(R.id.buttonPlanear)
         buttonPlanear.setOnClickListener { onClickButtonPlanear() }
@@ -57,19 +65,16 @@ class RoutePlanningActivity : AppCompatActivity() {
             else{
                 val geoCoder = Geocoder(this)
                 try {
-                    addressListSta = geoCoder.getFromLocationName(locationSta, 1)
-                    addressListDes = geoCoder.getFromLocationName(locationDes, 1)
+                    addressListSta = geoCoder.getFromLocationName(locationSta+", Colombia", 1)
+                    addressListDes = geoCoder.getFromLocationName(locationDes+", Colombia", 1)
                     val addressSta = addressListSta!![0]
                     val addressDes = addressListDes!![0]
 
-                    val licenseOfCar = "AAA111"
-
-                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
+                    val i = Intent(this, MyCarsActivity::class.java)
                     val route =  Route(locationSta, locationDes,
                         "2/05/2021", addressSta.latitude, addressSta.longitude,
                         addressDes.latitude, addressDes.longitude)
                     i.putExtra("rutaSeleccionada", route)
-                    i.putExtra("licenseOfCar", licenseOfCar)
                     startActivity(i)
 
                 } catch (e: IOException) {
@@ -80,38 +85,7 @@ class RoutePlanningActivity : AppCompatActivity() {
     }
 
     fun initRecycler(){
-        try {
-            val response = apolloClient.query(RoutesByLicenseQuery(License("AAA111"))).enqueue(
-                object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
-                    override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
-                        //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
-                        val arrayRoutesAndDates = response?.data?.getDatesByLicense
-
-                        if (arrayRoutesAndDates != null) {
-                            for (routeAndDate in arrayRoutesAndDates) {
-                                var date =
-                                    routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
-                                var rute = Route(
-                                    routeAndDate?.route?.startCity.toString(),
-                                    routeAndDate?.route?.arrivalCity.toString(),
-                                    date,
-                                    routeAndDate?.route?.latitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.latitudeEnd?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeEnd?.toDouble()!!
-                                )
-                                routes.add(rute)
-                            }
-                        }
-                    }
-                    override fun onFailure(e: ApolloException) {
-                        println("****Error apolloClient $e")
-                    }
-                });
-
-        } catch (e: Exception) {
-            println("*****Error $e")
-        }
+        //Se hace la misma consulta en MapsActivity, por tanto recibe la lista de routes desde esa
         Handler().postDelayed({
             mAdapter = RouteAdapter(routes)
             mRecyclerView = findViewById(R.id.rvRoouteList) as RecyclerView
@@ -119,6 +93,7 @@ class RoutePlanningActivity : AppCompatActivity() {
             mRecyclerView.layoutManager = LinearLayoutManager(this)
             mAdapter.RouteAdapter(routes as MutableList<Route>, this)
             mRecyclerView.adapter = mAdapter
-        }, 1000)
+
+        }, 200)
     }
 }

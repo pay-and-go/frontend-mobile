@@ -23,6 +23,7 @@ import com.example.payandgo.*
 import com.example.payandgo.databinding.HomeFragmentBinding
 import com.example.payandgo.models.Route
 import com.example.payandgo.type.License
+import com.example.payandgo.utils.InitApplication
 import com.example.payandgo.utils.RouteAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -58,7 +59,8 @@ class HomeFragment : Fragment() {
         }
         mRecyclerView = rootView.findViewById(R.id.rvRoouteListInMap) as RecyclerView
         homeFragmentBinding.editTextDestination.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToRoutePlanningFragment()
+            val safeArgs = ArrayList<Route>(viewModel.routes)
+            val action = HomeFragmentDirections.actionHomeFragmentToRoutePlanningFragment(safeArgs.toTypedArray())
             findNavController().navigate(action)
         }
         return rootView
@@ -173,28 +175,70 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initRecycler() {
-        try {
-            val response = apolloClient.query(RoutesByLicenseQuery(License("AAA111"))).enqueue(
-                object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
-                    override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
-                        //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
-                        val arrayRoutesAndDates = response?.data?.getDatesByLicense
+    fun initRecycler() {
+        checkAllCarsOfUser()
+        //Para esperar la respuesta de la consulta anterior
+        Handler().postDelayed({
+            for (license in viewModel.cars) {
+                try {
+                    val response =
+                        apolloClient.query(RoutesByLicenseQuery(License(license))).enqueue(
+                            object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
+                                override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
+                                    //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
+                                    val arrayRoutesAndDates = response?.data?.getDatesByLicense
 
-                        if (arrayRoutesAndDates != null) {
-                            for (routeAndDate in arrayRoutesAndDates) {
-                                var date =
-                                    routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
-                                var rute = Route(
-                                    routeAndDate?.route?.startCity.toString(),
-                                    routeAndDate?.route?.arrivalCity.toString(),
-                                    date,
-                                    routeAndDate?.route?.latitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.latitudeEnd?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeEnd?.toDouble()!!
-                                )
-                                viewModel.routes.add(rute)
+                                    if (arrayRoutesAndDates != null) {
+                                        for (routeAndDate in arrayRoutesAndDates) {
+                                            var date =
+                                                routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
+                                            var rute = Route(
+                                                routeAndDate?.route?.startCity.toString(),
+                                                routeAndDate?.route?.arrivalCity.toString(),
+                                                date,
+                                                routeAndDate?.route?.latitudeStart?.toDouble()!!,
+                                                routeAndDate?.route?.longitudeStart?.toDouble()!!,
+                                                routeAndDate?.route?.latitudeEnd?.toDouble()!!,
+                                                routeAndDate?.route?.longitudeEnd?.toDouble()!!
+                                            )
+                                            viewModel.routes.add(rute)
+                                        }
+                                    }
+                                }
+
+                                override fun onFailure(e: ApolloException) {
+                                    println("****Error apolloClient $e")
+                                }
+                            });
+                } catch (e: Exception) {
+                    println("*****Error $e")
+                }
+
+            }
+            Handler().postDelayed({
+                mAdapter = RouteAdapter(viewModel.routes)
+                mRecyclerView = homeFragmentBinding.rvRoouteListInMap
+                mRecyclerView.setHasFixedSize(true)
+                mRecyclerView.layoutManager = LinearLayoutManager(ctx)
+                mAdapter.RouteAdapter(viewModel.routes, ctx)
+                mRecyclerView.adapter = mAdapter
+            }, 1500)
+
+        }, 800)
+    }
+
+    fun checkAllCarsOfUser() {
+        try {
+            val response = apolloClient.query(VehicleByIdUserQuery(InitApplication.prefs.getId())).enqueue(
+                object : ApolloCall.Callback<VehicleByIdUserQuery.Data>() {
+                    override fun onResponse(response: Response<VehicleByIdUserQuery.Data>) {
+                        val arrayCarsInformation = response?.data?.vehicleByIdUser
+
+                        if (arrayCarsInformation != null) {
+                            for (car in arrayCarsInformation) {
+                                if (car != null) {
+                                    viewModel.cars.add(car.placa)
+                                }
                             }
                         }
                     }
@@ -203,18 +247,9 @@ class HomeFragment : Fragment() {
                         println("****Error apolloClient $e")
                     }
                 });
-
         } catch (e: Exception) {
             println("*****Error $e")
         }
-        Handler().postDelayed({
-            mAdapter = RouteAdapter(viewModel.routes)
-
-            mRecyclerView.setHasFixedSize(true)
-            mRecyclerView.layoutManager = LinearLayoutManager(ctx)
-            mAdapter.RouteAdapter(viewModel.routes, ctx)
-            mRecyclerView.adapter = mAdapter
-        }, 1000)
     }
 
 }

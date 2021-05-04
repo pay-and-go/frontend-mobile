@@ -1,6 +1,7 @@
 package com.example.payandgo.ui.routes
 
 import android.content.Context
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
@@ -21,6 +24,7 @@ import com.example.payandgo.*
 import com.example.payandgo.databinding.RoutePlanningFragmentBinding
 import com.example.payandgo.models.Route
 import com.example.payandgo.type.License
+import com.example.payandgo.ui.home.HomeFragmentDirections
 import com.example.payandgo.utils.RouteAdapter
 import java.io.IOException
 
@@ -31,6 +35,7 @@ class RoutePlanningFragment : Fragment() {
     private lateinit var ctx: Context
     private lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: RouteAdapter
+    private val args: RoutePlanningFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,12 +55,13 @@ class RoutePlanningFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(RoutePlanningViewModel::class.java)
+        viewModel.routes = args.argRoutes.toMutableList()
         initRecycler()
     }
 
     private fun onClickButtonPlanear() {
-        val locationStart: EditText = bindingRoutePlanningFragment.editTextStart
-        val locationDestination: EditText = bindingRoutePlanningFragment.editTextDestination2
+        val locationStart:EditText = bindingRoutePlanningFragment.editTextStart
+        val locationDestination:EditText = bindingRoutePlanningFragment.editTextDestination2
         lateinit var locationSta: String
         lateinit var locationDes: String
 
@@ -66,28 +72,24 @@ class RoutePlanningFragment : Fragment() {
         var addressListDes: List<Address>? = null
 
         if (locationSta == null || locationSta == "") {
-            Toast.makeText(ctx,"escriba un origen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx,"escriba un origen",Toast.LENGTH_SHORT).show()
         }else{
             if (locationDes == null || locationDes == "") {
-                Toast.makeText(ctx,"escriba un destino", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx,"escriba un destino",Toast.LENGTH_SHORT).show()
             }
             else{
                 val geoCoder = Geocoder(ctx)
                 try {
-                    addressListSta = geoCoder.getFromLocationName(locationSta, 1)
-                    addressListDes = geoCoder.getFromLocationName(locationDes, 1)
+                    addressListSta = geoCoder.getFromLocationName(locationSta+", Colombia", 1)
+                    addressListDes = geoCoder.getFromLocationName(locationDes+", Colombia", 1)
                     val addressSta = addressListSta!![0]
                     val addressDes = addressListDes!![0]
 
-                    val licenseOfCar = "AAA111"
-
-//                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
-//                    val route =  Route(locationSta, locationDes,
-//                        "2/05/2021", addressSta.latitude, addressSta.longitude,
-//                        addressDes.latitude, addressDes.longitude)
-//                    i.putExtra("rutaSeleccionada", route)
-//                    i.putExtra("licenseOfCar", licenseOfCar)
-//                    startActivity(i)
+                    val route =  Route(locationSta, locationDes,
+                        "2/05/2021", addressSta.latitude, addressSta.longitude,
+                        addressDes.latitude, addressDes.longitude)
+                    val action = RoutePlanningFragmentDirections.actionRoutePlanningFragmentToMyCarsFragment(route)
+                    findNavController().navigate(action)
 
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -97,38 +99,7 @@ class RoutePlanningFragment : Fragment() {
     }
 
     fun initRecycler(){
-        try {
-            val response = apolloClient.query(RoutesByLicenseQuery(License("AAA111"))).enqueue(
-                object : ApolloCall.Callback<RoutesByLicenseQuery.Data>() {
-                    override fun onResponse(response: Response<RoutesByLicenseQuery.Data>) {
-                        //println("respuesta ${response?.data?.getDatesByLicense?.get(0)}")
-                        val arrayRoutesAndDates = response?.data?.getDatesByLicense
-
-                        if (arrayRoutesAndDates != null) {
-                            for (routeAndDate in arrayRoutesAndDates) {
-                                var date =
-                                    routeAndDate?.date?.dayTravel.toString() + "/" + routeAndDate?.date?.monthTravel.toString() + "/" + routeAndDate?.date?.yearTravel.toString()
-                                var rute = Route(
-                                    routeAndDate?.route?.startCity.toString(),
-                                    routeAndDate?.route?.arrivalCity.toString(),
-                                    date,
-                                    routeAndDate?.route?.latitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeStart?.toDouble()!!,
-                                    routeAndDate?.route?.latitudeEnd?.toDouble()!!,
-                                    routeAndDate?.route?.longitudeEnd?.toDouble()!!
-                                )
-                                viewModel.routes.add(rute)
-                            }
-                        }
-                    }
-                    override fun onFailure(e: ApolloException) {
-                        println("****Error apolloClient $e")
-                    }
-                });
-
-        } catch (e: Exception) {
-            println("*****Error $e")
-        }
+        //Se hace la misma consulta en MapsActivity, por tanto recibe la lista de routes desde esa
         Handler().postDelayed({
             mAdapter = RouteAdapter(viewModel.routes)
             mRecyclerView = bindingRoutePlanningFragment.rvRoouteList
@@ -136,7 +107,7 @@ class RoutePlanningFragment : Fragment() {
             mRecyclerView.layoutManager = LinearLayoutManager(ctx)
             mAdapter.RouteAdapter(viewModel.routes, ctx)
             mRecyclerView.adapter = mAdapter
-        }, 1000)
+        }, 200)
     }
 
 }
