@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="0dp"
+        tools:context=".MapsActivity" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="-2dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/white"
+        tools:ignore="BottomAppBar"
+        >
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <RelativeLayout
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="start"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="-2dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/white"
+        tools:ignore="BottomAppBar">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="144dp"
+            android:text="Destinos Recientes"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/editTextDestination"
+            android:focusable="false"
+            android:layout_width="322dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:hint="¿A dónde quieres ir?"
+            android:inputType="textPersonName" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRoouteListInMap"
+            android:layout_width="match_parent"
+            android:layout_height="508dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="0dp"
+            android:clipToPadding="false"
+            android:padding="1dp"
+            tools:listitem="@layout/item_route"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

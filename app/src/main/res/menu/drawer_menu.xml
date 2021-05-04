@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/accountFragment"
+        android:icon="@drawable/ic_account"
+        android:title="Cuenta"/>
+
+<!--    <item-->
+<!--        android:id="@+id/tollFragment"-->
+<!--        android:icon="@drawable/ic_payment"-->
+<!--        android:title="Pagos"/>-->
+
+<!--    <item-->
+<!--        android:id="@+id/homeFragment"-->
+<!--        android:icon="@drawable/ic_journey"-->
+<!--        android:title="Mis Viajes"/>-->
+
+<!--    <item-->
+<!--        android:id="@+id/tollFragment"-->
+<!--        android:icon="@drawable/ic_vehicles"-->
+<!--        android:title="Mis Vehiculos"/>-->
+
+    <item
+        android:id="@+id/helpFragment"
+        android:icon="@drawable/ic_help"
+        android:title="Ayuda"/>
+
+</menu>
