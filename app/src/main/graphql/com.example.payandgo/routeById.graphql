@@ -1,0 +1,12 @@
+query RouteById($idRoute: RouteIdInput!){
+    routeById(routeId: $idRoute){
+        idRoute,
+        startCity,
+        arrivalCity,
+        description,
+        latitudeStart,
+        longitudeStart,
+        latitudeEnd,
+        longitudeEnd
+    }
+}

@@ -1,0 +1,5 @@
+mutation CreateRoute ($route: RouteInput!) {
+    createRoute(route: $route) {
+        idNodeRoute
+    }
+}

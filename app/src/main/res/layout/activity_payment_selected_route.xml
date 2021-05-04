@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PaymentSelectedRouteActivity">
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="148dp"
+        android:gravity="center"
+        android:text="PAGO"
+        android:textColor="@color/orange"
+        android:textSize="25dp"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/textSubtitleRuta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="150dp"
+        android:textColor="@color/black"
+        android:text="Ruta"
+        android:textSize="20dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/textOrigin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="95dp"
+        android:text="Origen: "
+        android:textColor="@color/orange"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textStartCitySelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="95dp"
+        android:textSize="20dp"
+        android:text="Bogotá" />
+
+    <TextView
+        android:id="@+id/textDestination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="140dp"
+        android:text="Destino: "
+        android:textColor="@color/orange"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textArrivalCitySelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="140dp"
+        android:text="Sopó"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textTodayDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="117dp"
+        android:layout_marginEnd="30dp"
+        android:text="2/05/2021"
+        android:textSize="15dp"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/textSubtitlePeaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="150dp"
+        android:gravity="center"
+        android:text="Peajes"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTollListSelected"
+        android:layout_width="match_parent"
+        android:layout_height="367dp"
+        android:layout_below="@+id/textSubtitlePeaje"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="120dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        tools:listitem="@layout/item_tolls" />
+
+    <TextView
+        android:id="@+id/textTotalLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="80dp"
+        android:text="Saldo Total: "
+        android:textColor="@color/orange"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textTotalBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="80dp"
+        android:layout_toEndOf="@+id/textTotalLabel"
+        android:text="-"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/buttonPay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="PAGAR"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

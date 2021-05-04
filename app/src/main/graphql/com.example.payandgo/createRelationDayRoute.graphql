@@ -1,0 +1,5 @@
+mutation CreateRelationDayRoute ($dateroute: DayRoute!) {
+    createRelationDayRoute(dateroute: $dateroute) {
+        idRelationDateRoute
+    }
+}

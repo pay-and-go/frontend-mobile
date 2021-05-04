@@ -1,13 +1,12 @@
-query VehicleByIdUser($id: Int!) {
-	vehicleByIdUser(iduser: $id){
+query VehicleByIdUser($iduser: Int!){
+    vehicleByIdUser(iduser: $iduser){
         id
         iduser
-        tipo
         placa
-        color
         marca
+        tipo
         color
         createdAt
         updatedAt
-  }
+    }
 }

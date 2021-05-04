@@ -1,0 +1,5 @@
+mutation CreateDay ($date: DateInput!) {
+    createDay(date: $date) {
+        idNodeDate
+    }
+}

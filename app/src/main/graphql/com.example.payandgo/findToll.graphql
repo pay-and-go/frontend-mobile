@@ -1,0 +1,12 @@
+mutation FindToll($coor_lat: Float!, $coor_lng: Float!){
+    findToll(
+        coor_lat: $coor_lat,
+        coor_lng: $coor_lng
+    ){
+        coor_lat
+        coor_lng
+        name
+        tollId
+        distance
+    }
+}

@@ -2,6 +2,7 @@ package com.example.payandgo
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.apollographql.apollo.coroutines.await
+import com.example.payandgo.InitApplication.Companion.prefs
 import com.example.payandgo.databinding.ActivityLoginBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var bindingLogin: ActivityLoginBinding
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
             18, 29,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
+        checkUserValues()
         bindingLogin.buttonLogin.setOnClickListener {
             accessToInfo(this)
         }
@@ -44,6 +48,12 @@ class LoginActivity : AppCompatActivity() {
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
             finish()
+        }
+    }
+
+    fun checkUserValues(){
+        if (prefs.getMail().isNotEmpty()){
+            accesApp()
         }
     }
 
@@ -64,10 +74,13 @@ class LoginActivity : AppCompatActivity() {
                                     " email ${user?.mail} password ${user?.password}")
                             if(user?.mail == userEmail && user?.password == userPass){
                                 found = true
-                                val i = Intent(ctx, MapsActivity::class.java)
-                                startActivity(i)
-                                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
-                                finish()
+                                prefs.saveId(user.id)
+                                prefs.saveFirstName(user.first_name)
+                                prefs.saveLastName(user.last_name)
+                                prefs.saveCC(user.cedula)
+                                prefs.saveMail(user.mail)
+                                prefs.savePassword(user.password)
+                                accesApp()
                             }
                         }
                         if (!found){
@@ -82,5 +95,12 @@ class LoginActivity : AppCompatActivity() {
         }else {
             Toast.makeText(ctx, "Tienes que llenar todos los campos", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun accesApp(){
+        val i = Intent(this, MapsActivity::class.java)
+        startActivity(i)
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+        finish()
     }
 }

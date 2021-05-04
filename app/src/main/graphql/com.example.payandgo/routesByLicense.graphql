@@ -1,0 +1,19 @@
+query RoutesByLicense($license: License!){
+    getDatesByLicense(license:$license){
+        date{
+            dayTravel,
+            monthTravel,
+            yearTravel
+        },
+        route{
+            idRoute,
+            startCity,
+            arrivalCity,
+            description,
+            latitudeStart,
+            longitudeStart,
+            latitudeEnd,
+            longitudeEnd
+        }
+    }
+}
