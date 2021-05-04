@@ -4,17 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.apollographql.apollo.coroutines.await
-import com.example.payandgo.InitApplication.Companion.prefs
+import com.example.payandgo.utils.InitApplication.Companion.prefs
 import com.example.payandgo.databinding.ActivityLoginBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun accesApp(){
-        val i = Intent(this, MapsActivity::class.java)
+        val i = Intent(this, MainActivity::class.java)
         startActivity(i)
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
         finish()

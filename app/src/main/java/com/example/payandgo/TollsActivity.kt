@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import com.example.payandgo.type.License
+import com.example.payandgo.models.Toll
+import com.example.payandgo.utils.TollAdapter
 
 class TollsActivity : AppCompatActivity() {
 

@@ -3,13 +3,13 @@ package com.example.payandgo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import com.example.payandgo.InitApplication.Companion.prefs
+import com.example.payandgo.models.Payment
+import com.example.payandgo.utils.InitApplication.Companion.prefs
 
 class PaymentsActivity : AppCompatActivity() {
 

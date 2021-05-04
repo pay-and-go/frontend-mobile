@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="Ruta"/>
+
+    <item
+        android:id="@+id/tollFragment"
+        android:icon="@drawable/ic_toll"
+        android:title="Peajes"/>
+
+    <item
+        android:id="@+id/paymentsFragment"
+        android:icon="@drawable/ic_payment"
+        android:title="Pagos"/>
+
+</menu>

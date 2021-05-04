@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.payandgo.models.Car
+import com.example.payandgo.models.Route
 
 class CarAdapter(car: List<Car>): RecyclerView.Adapter<CarAdapter.ViewHolder>() {
 

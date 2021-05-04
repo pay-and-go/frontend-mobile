@@ -1,4 +1,4 @@
-package com.example.payandgo
+package com.example.payandgo.models
 
 data class Car(
     val idOwner: Int,

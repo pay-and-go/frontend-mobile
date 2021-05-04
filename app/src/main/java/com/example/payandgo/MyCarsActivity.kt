@@ -4,14 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import com.example.payandgo.InitApplication.Companion.prefs
-import kotlinx.coroutines.delay
+import com.example.payandgo.models.Car
+import com.example.payandgo.models.Route
+import com.example.payandgo.utils.InitApplication.Companion.prefs
 
 class MyCarsActivity : AppCompatActivity() {
 

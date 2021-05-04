@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.payandgo.ui.home.HomeFragment"
+        android:label="home_fragment"
+        tools:layout="@layout/home_fragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_routePlanningFragment"
+            app:destination="@id/routePlanningFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tollFragment"
+        android:name="com.example.payandgo.ui.tolls.TollFragment"
+        android:label="toll_fragment"
+        tools:layout="@layout/toll_fragment" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.payandgo.ui.account.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.example.payandgo.ui.account.HelpFragment"
+        android:label="fragment_help"
+        tools:layout="@layout/fragment_help" />
+    <fragment
+        android:id="@+id/routePlanningFragment"
+        android:name="com.example.payandgo.ui.routes.RoutePlanningFragment"
+        android:label="route_planning_fragment"
+        tools:layout="@layout/route_planning_fragment" >
+        <argument
+            android:name="argRoutes"
+            app:argType="com.example.payandgo.models.Route[]" />
+        <action
+            android:id="@+id/action_routePlanningFragment_to_myCarsFragment"
+            app:destination="@id/myCarsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/myCarsFragment"
+        android:name="com.example.payandgo.ui.vehicles.MyCarsFragment"
+        android:label="my_cars_fragment"
+        tools:layout="@layout/my_cars_fragment" >
+        <argument
+            android:name="safeRoute"
+            app:argType="com.example.payandgo.models.Route" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentSelectedRouteFragment"
+        android:name="com.example.payandgo.ui.payment.PaymentSelectedRouteFragment"
+        android:label="payment_selected_route_fragment"
+        tools:layout="@layout/payment_selected_route_fragment" />
+    <fragment
+        android:id="@+id/paymentsFragment"
+        android:name="com.example.payandgo.ui.payment.PaymentsFragment"
+        android:label="payments_fragment"
+        tools:layout="@layout/payments_fragment" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.payandgo.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+</navigation>
