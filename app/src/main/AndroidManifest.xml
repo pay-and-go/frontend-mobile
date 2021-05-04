@@ -21,16 +21,18 @@
         android:name=".InitApplication"
         android:theme="@style/Theme.PayAndGo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MyCarsActivity"/>
+        <activity android:name=".MyCarsActivity">
+
+        </activity>
 
         <activity android:name=".TravelsActivity" />
-        <activity android:name=".PaymentsActivity" />
+        <activity android:name=".PaymentsActivity">
+        </activity>
         <activity android:name=".AccountActivity" />
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
         <activity android:name=".PaymentSelectedRouteActivity">
-
         </activity>
         <activity android:name=".TollsActivity"></activity>
         <activity android:name=".InRouteActivity" />

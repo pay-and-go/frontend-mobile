@@ -35,18 +35,18 @@ class PaymentAdapter(payment: List<Payment>): RecyclerView.Adapter<PaymentAdapte
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val fechaPago = view.findViewById(R.id.textDatePayment) as TextView
-        val horaPago = view.findViewById(R.id.textHourPayment) as TextView
-        val licence = view.findViewById(R.id.textLicencePayment) as TextView
-        val peaje = view.findViewById(R.id.textNumberPayment) as TextView
-        val valor = view.findViewById(R.id.textValuePayment) as TextView
+        val textNumberPayment = view.findViewById(R.id.textNumberPayment) as TextView
+        val textDatePayment = view.findViewById(R.id.textDatePayment) as TextView
+        val textLicencePayment = view.findViewById(R.id.textLicencePayment) as TextView
+        val textTollId = view.findViewById(R.id.textTollId) as TextView
+        val textValuePayment = view.findViewById(R.id.textValuePayment) as TextView
 
         fun bind(payment: Payment, context: Context){
-            fechaPago.text = payment.fechaPago
-            horaPago.text = payment.horaPago
-            licence.text = payment.licence
-            peaje.text = payment.peaje.toString()
-            valor.text = payment.valor.toString()
+            textNumberPayment.text = payment.idPago.toString()
+            textDatePayment.text = payment.fechaPago
+            textLicencePayment.text = payment.licence
+            textTollId.text = payment.peaje.toString()
+            textValuePayment.text = payment.valor.toString()
         }
     }
 

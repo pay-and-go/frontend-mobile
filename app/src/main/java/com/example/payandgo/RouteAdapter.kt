@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
 
-class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewHolder>(){
+class RouteAdapter(routes: List<Route>,) :RecyclerView.Adapter<RouteAdapter.ViewHolder>(){
 
     var routes: MutableList<Route> = ArrayList()
     lateinit var context: Context
@@ -44,11 +44,9 @@ class RouteAdapter(routes: List<Route>) :RecyclerView.Adapter<RouteAdapter.ViewH
             arrivalCity.text = route.arrivalCity
             description.text = route.date
             itemView.setOnClickListener(View.OnClickListener {
-                val licenseOfCar = "AAA111"
 
-                val i = Intent(context, PaymentSelectedRouteActivity::class.java)
+                val i = Intent(context, MyCarsActivity::class.java)
                 i.putExtra("rutaSeleccionada", route)
-                i.putExtra("licenseOfCar", licenseOfCar)
                 context.startActivity(i)
             })
         }

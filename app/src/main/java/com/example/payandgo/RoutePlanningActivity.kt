@@ -69,14 +69,11 @@ class RoutePlanningActivity : AppCompatActivity() {
                     val addressSta = addressListSta!![0]
                     val addressDes = addressListDes!![0]
 
-                    val licenseOfCar = "AAA111"
-
-                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
+                    val i = Intent(this, MyCarsActivity::class.java)
                     val route =  Route(locationSta, locationDes,
                         "2/05/2021", addressSta.latitude, addressSta.longitude,
                         addressDes.latitude, addressDes.longitude)
                     i.putExtra("rutaSeleccionada", route)
-                    i.putExtra("licenseOfCar", licenseOfCar)
                     startActivity(i)
 
                 } catch (e: IOException) {

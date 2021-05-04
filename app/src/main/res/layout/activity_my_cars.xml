@@ -9,16 +9,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMyCars"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="605dp"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="59dp"
         android:layout_marginBottom="20dp"
         android:clipToPadding="false"
         android:padding="4dp"
-        tools:listitem="@layout/item_car"/>
+        tools:listitem="@layout/item_car" />
 
 
     <TextView
@@ -37,6 +37,15 @@
         android:textColor="@color/orange"
         android:text="Mis Autos" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="Seleccione el auto con el que viajará"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>

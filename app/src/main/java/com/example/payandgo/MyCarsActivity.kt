@@ -1,5 +1,6 @@
 package com.example.payandgo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +16,7 @@ import kotlinx.coroutines.delay
 class MyCarsActivity : AppCompatActivity() {
 
     var cars = mutableListOf<Car>()
+    lateinit var route: Route
     lateinit var mRecycleView: RecyclerView
     lateinit var mAdapter: CarAdapter
 
@@ -22,6 +24,13 @@ class MyCarsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_cars)
         initRecycler()
+
+        try {
+            val objetoIntent: Intent = intent
+            route = objetoIntent.getParcelableExtra<Route>("rutaSeleccionada")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun initRecycler(){
@@ -61,7 +70,7 @@ class MyCarsActivity : AppCompatActivity() {
             mRecycleView = findViewById(R.id.rvMyCars) as RecyclerView
             mRecycleView.setHasFixedSize(true)
             mRecycleView.layoutManager = LinearLayoutManager(this)
-            mAdapter.CarAdapter(cars as MutableList<Car>, this)
+            mAdapter.CarAdapter(cars as MutableList<Car>,route,  this)
             mRecycleView.adapter = mAdapter
 
         },1000)
