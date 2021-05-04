@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.example.payandgo.InitApplication.Companion.prefs
 
 class PaymentsActivity : AppCompatActivity() {
 
@@ -23,7 +24,7 @@ class PaymentsActivity : AppCompatActivity() {
     }
 
     fun initRecycler(){
-        var userId:Int = 9
+        var userId:Int = prefs.getId()
         try {
             val response = apolloClient.query(VehicleByIdUserQuery(userId)).enqueue(
                     object : ApolloCall.Callback<VehicleByIdUserQuery.Data>() {

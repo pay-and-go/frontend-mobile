@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.example.payandgo.InitApplication.Companion.prefs
 import kotlinx.coroutines.delay
 
 class MyCarsActivity : AppCompatActivity() {
@@ -20,13 +21,11 @@ class MyCarsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_cars)
-        println("***")
-        Log.d("debug","aaaaaaaaaaa")
         initRecycler()
     }
 
     fun initRecycler(){
-        var userId:Int = 5
+        var userId:Int = prefs.getId()
         try {
             val response = apolloClient.query(VehicleByIdUserQuery(userId)).enqueue(
                     object : ApolloCall.Callback<VehicleByIdUserQuery.Data>() {
