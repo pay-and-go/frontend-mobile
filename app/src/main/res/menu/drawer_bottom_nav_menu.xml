@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_toll"
         android:title="Peajes"/>
 
+    <item
+        android:id="@+id/paymentsFragment"
+        android:icon="@drawable/ic_payment"
+        android:title="Pagos"/>
+
 </menu>

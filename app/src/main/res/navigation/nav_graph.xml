@@ -26,7 +26,11 @@
         android:id="@+id/accountFragment"
         android:name="com.example.payandgo.ui.account.AccountFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
     <fragment
         android:id="@+id/helpFragment"
         android:name="com.example.payandgo.ui.account.HelpFragment"
@@ -65,4 +69,9 @@
         android:name="com.example.payandgo.ui.payment.PaymentsFragment"
         android:label="payments_fragment"
         tools:layout="@layout/payments_fragment" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.payandgo.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
 </navigation>

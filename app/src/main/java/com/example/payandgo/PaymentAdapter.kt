@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.payandgo.models.Payment
 
 class PaymentAdapter(payment: List<Payment>): RecyclerView.Adapter<PaymentAdapter.ViewHolder>() {
 
