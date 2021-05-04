@@ -1,0 +1,13 @@
+query VehicleByIdUser($id: Int!) {
+	vehicleByIdUser(iduser: $id){
+        id
+        iduser
+        tipo
+        placa
+        color
+        marca
+        color
+        createdAt
+        updatedAt
+  }
+}

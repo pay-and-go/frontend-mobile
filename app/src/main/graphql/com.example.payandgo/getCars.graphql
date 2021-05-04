@@ -1,0 +1,7 @@
+query GetCars{
+  getCars{
+    idOwner
+    nameOwner
+    licenseCar
+  }
+}
