@@ -18,6 +18,7 @@ import com.example.payandgo.utils.RouteAdapter
 class RoutePlanningActivity : AppCompatActivity() {
 
     var routes = mutableListOf<Route>()
+    var idRoutes = mutableListOf<String>()
 
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: RouteAdapter
@@ -31,6 +32,7 @@ class RoutePlanningActivity : AppCompatActivity() {
         try {
             val objetoIntent: Intent = intent
             routes = objetoIntent.getParcelableArrayListExtra<Route>("listaDeRutas")
+            idRoutes = objetoIntent.getStringArrayListExtra("listaDeIdsRutas")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -105,25 +107,24 @@ class RoutePlanningActivity : AppCompatActivity() {
                 if(route?.arrivalCity?.toLowerCase() == locationDes.toLowerCase()){
                     found = true
 
-//                    val i = Intent(this, MyCarsActivity::class.java)
-//                    val routeAux =  Route(route?.startCity, route?.arrivalCity,
-//                        "2/05/2021", route?.latitudeStart!!.toDouble(), route?.longitudeStart!!.toDouble(),
-//                        route?.latitudeEnd!!.toDouble(), route?.longitudeEnd!!.toDouble())
-//                    i.putExtra("rutaSeleccionada", routeAux)
-//                    i.putExtra("IDrutaSeleccionada", route.idRoute)
-//                    startActivity(i)
-
-                    //Borrar después y descomentar anterior
+                    val i = Intent(this, MyCarsActivity::class.java)
                     val routeAux =  Route(route?.startCity, route?.arrivalCity,
                         "2/05/2021", route?.latitudeStart!!.toDouble(), route?.longitudeStart!!.toDouble(),
                         route?.latitudeEnd!!.toDouble(), route?.longitudeEnd!!.toDouble())
-
-                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
                     i.putExtra("rutaSeleccionada", routeAux)
-                    i.putExtra("IDrutaSeleccionada", route?.idRoute)
-                    i.putExtra("licenseOfCar", "AAA111")
+                    i.putExtra("IDrutaSeleccionada", route.idRoute)
                     startActivity(i)
 
+                    //Borrar después y descomentar anterior
+//                    val routeAux =  Route(route?.startCity, route?.arrivalCity,
+//                        "2/05/2021", route?.latitudeStart!!.toDouble(), route?.longitudeStart!!.toDouble(),
+//                        route?.latitudeEnd!!.toDouble(), route?.longitudeEnd!!.toDouble())
+//
+//                    val i = Intent(this, PaymentSelectedRouteActivity::class.java)
+//                    i.putExtra("rutaSeleccionada", routeAux)
+//                    i.putExtra("IDrutaSeleccionada", route?.idRoute)
+//                    i.putExtra("licenseOfCar", "AAA111")
+//                    startActivity(i)
                     //fin de borrar
 
                     break
@@ -142,7 +143,7 @@ class RoutePlanningActivity : AppCompatActivity() {
             mRecyclerView = findViewById(R.id.rvRoouteList) as RecyclerView
             mRecyclerView.setHasFixedSize(true)
             mRecyclerView.layoutManager = LinearLayoutManager(this)
-            mAdapter.RouteAdapter(routes as MutableList<Route>, this)
+            mAdapter.RouteAdapter(routes, idRoutes, this)
             mRecyclerView.adapter = mAdapter
 
         }, 200)

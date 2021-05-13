@@ -73,7 +73,7 @@ class MyCarsActivity : AppCompatActivity() {
             mRecycleView.setHasFixedSize(true)
             mRecycleView.layoutManager = LinearLayoutManager(this)
             //mAdapter.CarAdapter(cars as MutableList<Car>,route,  this)
-            mAdapter.CarAdapter(cars as MutableList<Car>,route,idRoute,  this)
+            mAdapter.CarAdapter(cars as MutableList<Car>,route,idRoute,true,this)
             mRecycleView.adapter = mAdapter
 
         },1000)

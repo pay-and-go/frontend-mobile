@@ -73,7 +73,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         try{
             val objetoIntent: Intent=intent
-            locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
+            //locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
             locationEnd  = objetoIntent.getParcelableExtra("latLngDestino")
             println("origennnnn $locationStart")
             println("destinoooo $locationEnd")
@@ -93,9 +93,10 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
                 println("onLocationResult ${locationResult.lastLocation}")
                 if(mMap != null){
                     setUserLocationMarker(locationResult.lastLocation)
-                    if (firstLocation && locationStart!= null){
+                    if (firstLocation && locationEnd != null){
                         val location = LatLng(locationResult.lastLocation.latitude,locationResult.lastLocation.longitude)
-                        val URL = getDirectionUrl(location,locationStart)
+                        locationStart = location
+                        val URL = getDirectionUrl(location,locationEnd)
                         println("GoogleMap URL : $URL")
                         GetDirection(URL).execute()
                         firstLocation = false
@@ -179,11 +180,11 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         checkPermission()
         enableUserLocation()
-        if (locationStart != null && locationEnd != null){
-            val URL = getDirectionUrl(locationStart,locationEnd)
-            println("GoogleMap URL : $URL")
-            GetDirection(URL).execute()
-        }
+//        if (locationStart != null && locationEnd != null){
+//            val URL = getDirectionUrl(locationStart,locationEnd)
+//            println("GoogleMap URL : $URL")
+//            GetDirection(URL).execute()
+//        }
     }
 
     private fun setUserLocationMarker(location: Location){

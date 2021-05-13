@@ -60,7 +60,8 @@ class HomeFragment : Fragment() {
         mRecyclerView = rootView.findViewById(R.id.rvRoouteListInMap) as RecyclerView
         homeFragmentBinding.editTextDestination.setOnClickListener {
             val safeArgs = ArrayList<Route>(viewModel.routes)
-            val action = HomeFragmentDirections.actionHomeFragmentToRoutePlanningFragment(safeArgs.toTypedArray())
+            val safeArgsIdRoutes = ArrayList<String>(viewModel.idRoutes)
+            val action = HomeFragmentDirections.actionHomeFragmentToRoutePlanningFragment(safeArgs.toTypedArray(),safeArgsIdRoutes.toTypedArray())
             findNavController().navigate(action)
         }
         return rootView
@@ -202,6 +203,7 @@ class HomeFragment : Fragment() {
                                                 routeAndDate?.route?.longitudeEnd?.toDouble()!!
                                             )
                                             viewModel.routes.add(rute)
+                                            viewModel.idRoutes.add(routeAndDate?.route?.idRoute!!)
                                         }
                                     }
                                 }
@@ -220,7 +222,7 @@ class HomeFragment : Fragment() {
                 mRecyclerView = homeFragmentBinding.rvRoouteListInMap
                 mRecyclerView.setHasFixedSize(true)
                 mRecyclerView.layoutManager = LinearLayoutManager(ctx)
-                mAdapter.RouteAdapter(viewModel.routes, ctx)
+                mAdapter.RouteAdapter(viewModel.routes, viewModel.idRoutes, ctx)
                 mRecyclerView.adapter = mAdapter
             }, 1500)
 

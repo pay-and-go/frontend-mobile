@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
 
     var routes = mutableListOf<Route>()
+    var idRoutes = mutableListOf<String>()
     var cars = mutableListOf<String>()
 
     lateinit var editTextDestination: EditText
@@ -221,6 +222,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                                                 routeAndDate?.route?.longitudeEnd?.toDouble()!!
                                             )
                                             routes.add(rute)
+                                            idRoutes.add(routeAndDate?.route?.idRoute!!)
                                         }
                                     }
                                 }
@@ -239,7 +241,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 mRecyclerView = findViewById(R.id.rvRoouteListInMap) as RecyclerView
                 mRecyclerView.setHasFixedSize(true)
                 mRecyclerView.layoutManager = LinearLayoutManager(ctx)
-                mAdapter.RouteAdapter(routes as MutableList<Route>, ctx)
+                mAdapter.RouteAdapter(routes as MutableList<Route>, idRoutes, ctx)
                 mRecyclerView.adapter = mAdapter
             }, 1500)
 
@@ -249,6 +251,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private fun onClickEditTextDestination() {
         val i = Intent(this, RoutePlanningActivity::class.java)
         i.putExtra("listaDeRutas", ArrayList<Parcelable>(routes))
+        i.putExtra("listaDeIdsRutas", ArrayList<String>(idRoutes))
         startActivity(i)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()

@@ -5,4 +5,5 @@ import com.example.payandgo.models.Route
 
 class RoutePlanningViewModel : ViewModel() {
     var routes = mutableListOf<Route>()
+    var idRoutes = mutableListOf<String>()
 }

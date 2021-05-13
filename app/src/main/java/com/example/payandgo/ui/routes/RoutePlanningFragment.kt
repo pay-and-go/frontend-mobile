@@ -1,6 +1,7 @@
 package com.example.payandgo.ui.routes
 
 import android.content.Context
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.ViewModelProvider
@@ -12,10 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apollographql.apollo.coroutines.await
 import com.example.payandgo.*
 import com.example.payandgo.databinding.RoutePlanningFragmentBinding
 import com.example.payandgo.models.Route
@@ -28,6 +31,7 @@ class RoutePlanningFragment : Fragment() {
     private lateinit var bindingRoutePlanningFragment: RoutePlanningFragmentBinding
     private lateinit var ctx: Context
     private lateinit var mRecyclerView: RecyclerView
+    var arrayRoutes: List<AllRoutesQuery.AllRoute?>? = null
     lateinit var mAdapter: RouteAdapter
     private val args: RoutePlanningFragmentArgs by navArgs()
 
@@ -50,6 +54,7 @@ class RoutePlanningFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(RoutePlanningViewModel::class.java)
         viewModel.routes = args.argRoutes.toMutableList()
+        viewModel.idRoutes = args.argIdsRoutes.toMutableList()
         initRecycler()
     }
 
@@ -62,9 +67,6 @@ class RoutePlanningFragment : Fragment() {
         locationSta = locationStart.text.toString()
         locationDes = locationDestination.text.toString()
 
-        var addressListSta: List<Address>? = null
-        var addressListDes: List<Address>? = null
-
         if (locationSta == null || locationSta == "") {
             Toast.makeText(ctx,"escriba un origen",Toast.LENGTH_SHORT).show()
         }else{
@@ -72,22 +74,42 @@ class RoutePlanningFragment : Fragment() {
                 Toast.makeText(ctx,"escriba un destino",Toast.LENGTH_SHORT).show()
             }
             else{
-                val geoCoder = Geocoder(ctx)
-                try {
-                    addressListSta = geoCoder.getFromLocationName(locationSta+", Colombia", 1)
-                    addressListDes = geoCoder.getFromLocationName(locationDes+", Colombia", 1)
-                    val addressSta = addressListSta!![0]
-                    val addressDes = addressListDes!![0]
 
-                    val route =  Route(locationSta, locationDes,
-                        "2/05/2021", addressSta.latitude, addressSta.longitude,
-                        addressDes.latitude, addressDes.longitude)
-                    val action = RoutePlanningFragmentDirections.actionRoutePlanningFragmentToMyCarsFragment(route)
-                    findNavController().navigate(action)
+                if(arrayRoutes == null){
+                    try {
+                        lifecycleScope.launchWhenResumed {
+                            val response = apolloClient.query(AllRoutesQuery()).await()
+                            arrayRoutes = response?.data?.allRoutes
 
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                            checkIfExistRoute(locationDes)
+                        }
+                    } catch (e: Exception) {
+                        println("*****Error $e")
+                    }
+                }else{
+                    checkIfExistRoute(locationDes)
                 }
+            }
+        }
+    }
+
+    fun checkIfExistRoute(locationDes: String){
+        var found = false
+        if (arrayRoutes != null) {
+            for (route in arrayRoutes!!){
+                if(route?.arrivalCity?.toLowerCase() == locationDes.toLowerCase()){
+                    found = true
+                    val routeAux =  Route(route?.startCity, route?.arrivalCity,
+                        "2/05/2021", route?.latitudeStart!!.toDouble(), route?.longitudeStart!!.toDouble(),
+                        route?.latitudeEnd!!.toDouble(), route?.longitudeEnd!!.toDouble())
+
+                    val action = RoutePlanningFragmentDirections.actionRoutePlanningFragmentToMyCarsFragment(routeAux, route.idRoute!!)
+                    findNavController().navigate(action)
+                    break
+                }
+            }
+            if(!found){
+                Toast.makeText(ctx,"Por el momento este destino no está disponible",Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -99,7 +121,7 @@ class RoutePlanningFragment : Fragment() {
             mRecyclerView = bindingRoutePlanningFragment.rvRoouteList
             mRecyclerView.setHasFixedSize(true)
             mRecyclerView.layoutManager = LinearLayoutManager(ctx)
-            mAdapter.RouteAdapter(viewModel.routes, ctx)
+            mAdapter.RouteAdapter(viewModel.routes, viewModel.idRoutes, ctx)
             mRecyclerView.adapter = mAdapter
         }, 200)
     }

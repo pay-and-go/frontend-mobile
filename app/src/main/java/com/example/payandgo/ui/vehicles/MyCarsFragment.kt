@@ -26,8 +26,9 @@ import com.example.payandgo.utils.InitApplication
 
 class MyCarsFragment : Fragment() {
 
-    lateinit var route: Route
-    lateinit var idRoute: String
+    var route: Route? = null
+    var idRoute: String? = null
+    var isPossibleClick: Boolean = false
     lateinit var mRecycleView: RecyclerView
     lateinit var mAdapter: CarAdapter
     private lateinit var bindingCarsFragment: MyCarsFragmentBinding
@@ -46,8 +47,21 @@ class MyCarsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         bindingCarsFragment = MyCarsFragmentBinding.inflate(inflater,container,false)
-        route = args.safeRoute
-        idRoute = "RT_01" //Preguntar Organista ***************************
+
+        try{
+            route = args.safeRoute
+            idRoute = args.safeIdRoute
+        }catch (e: Exception){
+            route = null
+            idRoute = null
+        }
+        if(route == null && idRoute == null){
+            bindingCarsFragment.txtSelecioneAuto.text = ""
+            isPossibleClick=false
+        }else{
+            bindingCarsFragment.txtSelecioneAuto.text = "Seleccione el auto con el que viajará"
+            isPossibleClick=true
+        }
         return bindingCarsFragment.root
     }
 
@@ -94,7 +108,7 @@ class MyCarsFragment : Fragment() {
             mRecycleView = bindingCarsFragment.rvMyCars
             mRecycleView.setHasFixedSize(true)
             mRecycleView.layoutManager = LinearLayoutManager(ctx)
-            mAdapter.CarAdapter(viewModel.cars,route,idRoute,  ctx)
+            mAdapter.CarAdapter(viewModel.cars,route,idRoute,isPossibleClick,ctx)
             mRecycleView.adapter = mAdapter
 
         },1000)

@@ -13,20 +13,22 @@ import com.example.payandgo.models.Route
 class CarAdapter(car: List<Car>): RecyclerView.Adapter<CarAdapter.ViewHolder>() {
 
     var cars : MutableList<Car> = ArrayList()
-    lateinit var route: Route
-    lateinit var idRoute: String
+    var route: Route? = null
+    var idRoute: String? = null
+    var isPossibleClick: Boolean = false
     lateinit var context: Context
 
-    fun CarAdapter(cars: MutableList<Car>, route: Route, idRoute: String, context: Context){
+    fun CarAdapter(cars: MutableList<Car>, route: Route?, idRoute: String?,isPossibleClick: Boolean, context: Context){
         this.cars = cars
         this.route = route
         this.idRoute = idRoute
+        this.isPossibleClick = isPossibleClick
         this.context = context
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = cars.get(position)
-        holder.bind(item, this.route, idRoute, context)
+        holder.bind(item, this.route, this.idRoute, this.isPossibleClick, context)
     }
 
 
@@ -47,19 +49,21 @@ class CarAdapter(car: List<Car>): RecyclerView.Adapter<CarAdapter.ViewHolder>() 
         val type = view.findViewById(R.id.textType) as TextView
         val brand = view.findViewById(R.id.textBrand) as TextView
 
-        fun bind(car: Car, route: Route, idRoute: String, context: Context){
+        fun bind(car: Car, route: Route?, idRoute: String?, isPossibleClick: Boolean, context: Context){
             licence.text = car.licenseCar
             color.text = car.colorCar
             type.text = car.typeCar.toString()
             brand.text = car.brandCar
-            itemView.setOnClickListener(View.OnClickListener {
+            if (isPossibleClick){
+                itemView.setOnClickListener(View.OnClickListener {
 
-                val i = Intent(context, PaymentSelectedRouteActivity::class.java)
-                i.putExtra("rutaSeleccionada", route)
-                i.putExtra("IDrutaSeleccionada", idRoute)
-                i.putExtra("licenseOfCar", car.licenseCar)
-                context.startActivity(i)
-            })
+                    val i = Intent(context, PaymentSelectedRouteActivity::class.java)
+                    i.putExtra("rutaSeleccionada", route)
+                    i.putExtra("IDrutaSeleccionada", idRoute)
+                    i.putExtra("licenseOfCar", car.licenseCar)
+                    context.startActivity(i)
+                })
+            }
         }
     }
 
