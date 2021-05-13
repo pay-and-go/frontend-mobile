@@ -20,6 +20,9 @@
         android:ems="10"
         android:hint="¿Desde qué ciudad sales?"
         android:inputType="textPersonName"
+        android:text="Bogotá"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

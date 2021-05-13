@@ -1,0 +1,14 @@
+query TollsInARouteByIdComplete($route: String!){
+    tollsInARouteByIdComplete(route: $route){
+        tollId
+        name
+        administrator
+        coor_lat
+        coor_lng
+        territory
+        sector
+        price
+        crane_phone_number
+        toll_phone_number
+    }
+}

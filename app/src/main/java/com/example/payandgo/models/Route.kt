@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Route(
-    val startCity: String,
+    val startCity: String?,
     val arrivalCity: String,
     val date: String,
     val latStart: Double,

@@ -17,6 +17,7 @@ class MyCarsActivity : AppCompatActivity() {
 
     var cars = mutableListOf<Car>()
     lateinit var route: Route
+    lateinit var idRoute: String
     lateinit var mRecycleView: RecyclerView
     lateinit var mAdapter: CarAdapter
 
@@ -28,6 +29,7 @@ class MyCarsActivity : AppCompatActivity() {
         try {
             val objetoIntent: Intent = intent
             route = objetoIntent.getParcelableExtra<Route>("rutaSeleccionada")
+            idRoute = objetoIntent.getStringExtra("IDrutaSeleccionada")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -70,7 +72,8 @@ class MyCarsActivity : AppCompatActivity() {
             mRecycleView = findViewById(R.id.rvMyCars) as RecyclerView
             mRecycleView.setHasFixedSize(true)
             mRecycleView.layoutManager = LinearLayoutManager(this)
-            mAdapter.CarAdapter(cars as MutableList<Car>,route,  this)
+            //mAdapter.CarAdapter(cars as MutableList<Car>,route,  this)
+            mAdapter.CarAdapter(cars as MutableList<Car>,route,idRoute,  this)
             mRecycleView.adapter = mAdapter
 
         },1000)

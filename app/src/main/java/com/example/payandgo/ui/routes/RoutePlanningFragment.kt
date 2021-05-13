@@ -1,7 +1,6 @@
 package com.example.payandgo.ui.routes
 
 import android.content.Context
-import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.ViewModelProvider
@@ -17,14 +16,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apollographql.apollo.ApolloCall
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
 import com.example.payandgo.*
 import com.example.payandgo.databinding.RoutePlanningFragmentBinding
 import com.example.payandgo.models.Route
-import com.example.payandgo.type.License
-import com.example.payandgo.ui.home.HomeFragmentDirections
 import com.example.payandgo.utils.RouteAdapter
 import java.io.IOException
 

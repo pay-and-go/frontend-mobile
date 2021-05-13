@@ -1,0 +1,5 @@
+query RouteIdById($routeId: RouteIdInput!){
+    routeIdById(routeId: $routeId){
+        idNodeRoute
+    }
+}

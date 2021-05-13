@@ -27,6 +27,7 @@ import com.example.payandgo.utils.InitApplication
 class MyCarsFragment : Fragment() {
 
     lateinit var route: Route
+    lateinit var idRoute: String
     lateinit var mRecycleView: RecyclerView
     lateinit var mAdapter: CarAdapter
     private lateinit var bindingCarsFragment: MyCarsFragmentBinding
@@ -46,6 +47,7 @@ class MyCarsFragment : Fragment() {
     ): View? {
         bindingCarsFragment = MyCarsFragmentBinding.inflate(inflater,container,false)
         route = args.safeRoute
+        idRoute = "RT_01" //Preguntar Organista ***************************
         return bindingCarsFragment.root
     }
 
@@ -92,7 +94,7 @@ class MyCarsFragment : Fragment() {
             mRecycleView = bindingCarsFragment.rvMyCars
             mRecycleView.setHasFixedSize(true)
             mRecycleView.layoutManager = LinearLayoutManager(ctx)
-            mAdapter.CarAdapter(viewModel.cars,route,  ctx)
+            mAdapter.CarAdapter(viewModel.cars,route,idRoute,  ctx)
             mRecycleView.adapter = mAdapter
 
         },1000)

@@ -40,18 +40,24 @@
             android:name=".RegisterActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
 
-        <activity android:name=".RoutePlanningActivity" />
+        <activity android:name=".RoutePlanningActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme.PayAndGo">
-            <intent-filter>
-              <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--              <action android:name="android.intent.action.MAIN" />-->
 
-              <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
+<!--              <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
       </activity>
       <!--
            The API key for Google Maps-based APIs is defined as a string resource.

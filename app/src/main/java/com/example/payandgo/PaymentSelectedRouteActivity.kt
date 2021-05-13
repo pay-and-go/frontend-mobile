@@ -36,6 +36,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
     var monthOfTodayDate: Int = 0
     var yearOfTodayDate: Int = 0
     private lateinit var route: Route
+    private lateinit var idRoute: String
     private lateinit var licenseOfCar: String
     private lateinit var nuevoUltimoIdRuta: String
 
@@ -56,6 +57,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
         try {
             val objetoIntent: Intent = intent
             route = objetoIntent.getParcelableExtra("rutaSeleccionada")
+            idRoute = objetoIntent.getStringExtra("IDrutaSeleccionada")
             licenseOfCar = objetoIntent.getStringExtra("licenseOfCar")
             fillRouteInformation(this)
         } catch (e: Exception) {
@@ -149,37 +151,50 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             var numero: Int = ultimoId.toInt()
             numero += 1
             if (numero < 10) {
-                nuevoUltimoIdRuta = "RT0$numero"
+                nuevoUltimoIdRuta = "RT_0$numero"
             } else {
-                nuevoUltimoIdRuta = "RT$numero"
+                nuevoUltimoIdRuta = "RT_$numero"
             }
         }, 2000)
     }
 
     private fun agregarRuta() {
+//        Handler().postDelayed({
+//            //println("********* $nuevoUltimoIdRuta")
+//            var description =
+//                "Viaje " + route.startCity.toString() + "-" + route.arrivalCity.toString()
+//            val createRouteMutation = CreateRouteMutation(
+//                RouteInput(
+//                    nuevoUltimoIdRuta,
+//                    Input.fromNullable(route.startCity.toString()),
+//                    Input.fromNullable(route.arrivalCity.toString()),
+//                    Input.fromNullable(description),
+//                    Input.fromNullable(route.latStart),
+//                    Input.fromNullable(route.lngStart),
+//                    Input.fromNullable(route.latArrival),
+//                    Input.fromNullable(route.lngArrival)
+//                )
+//            )
+//
+//            CoroutineScope(Dispatchers.IO).launch {
+//                try {
+//                    val response = apolloClient.mutate(createRouteMutation).await()
+//                    idNodoRoute = response.data?.createRoute?.idNodeRoute?.toInt() ?: -1
+//                    //println("******** $idNodoRoute")
+//
+//                } catch (e: Exception) {
+//                    println("exception $e")
+//                }
+//            }
+//        }, 2000)
+
         Handler().postDelayed({
-            //println("********* $nuevoUltimoIdRuta")
-            var description =
-                "Viaje " + route.startCity.toString() + "-" + route.arrivalCity.toString()
-            val createRouteMutation = CreateRouteMutation(
-                RouteInput(
-                    nuevoUltimoIdRuta,
-                    Input.fromNullable(route.startCity.toString()),
-                    Input.fromNullable(route.arrivalCity.toString()),
-                    Input.fromNullable(description),
-                    Input.fromNullable(route.latStart),
-                    Input.fromNullable(route.lngStart),
-                    Input.fromNullable(route.latArrival),
-                    Input.fromNullable(route.lngArrival)
-                )
-            )
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val response = apolloClient.mutate(createRouteMutation).await()
-                    idNodoRoute = response.data?.createRoute?.idNodeRoute?.toInt() ?: -1
+                    val response = apolloClient.query(RouteIdByIdQuery(RouteIdInput(idRoute))).await()
+                    idNodoRoute = response.data?.routeIdById?.idNodeRoute?.toInt() ?: -1
                     //println("******** $idNodoRoute")
-
                 } catch (e: Exception) {
                     println("exception $e")
                 }
@@ -286,7 +301,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             dayOfTodayDate.toString() + "/" + monthOfTodayDate.toString() + "/" + yearOfTodayDate.toString()
     }
 
-    fun createToll(toll: AllTollsQuery.AllToll?): Toll {
+    fun createToll(toll: TollsInARouteByIdCompleteQuery.TollsInARouteByIdComplete?): Toll {
         var tollAux = Toll(
             toll?.tollId?.toInt()!!,
             toll?.name.toString(),
@@ -314,27 +329,47 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
     fun initRecycler(view: PaymentSelectedRouteActivity) {
         try {
 
-            val response = apolloClient.query(AllTollsQuery()).enqueue(
-                object : ApolloCall.Callback<AllTollsQuery.Data>() {
-                    override fun onResponse(response: Response<AllTollsQuery.Data>) {
+//            val response = apolloClient.query(AllTollsQuery()).enqueue(
+//                object : ApolloCall.Callback<AllTollsQuery.Data>() {
+//                    override fun onResponse(response: Response<AllTollsQuery.Data>) {
+//                        //println("respuestaaaaa ${response?.data}")
+//                        val arrayTolls = response?.data?.allTolls
+//
+//                        if (arrayTolls != null) {
+//                            var num1 = (0 until (arrayTolls?.size ?: 10)).random()
+//                            var num2 = (0 until (arrayTolls?.size ?: 10)).random()
+//                            while (num1 == num2) {
+//                                num2 = (0 until (arrayTolls?.size ?: 10)).random()
+//                            }
+//
+//                            var toll1Data = arrayTolls?.get(num1)
+//                            var toll2Data = arrayTolls?.get(num2)
+//
+//                            var toll1 = createToll(toll1Data)
+//                            var toll2 = createToll(toll2Data)
+//
+//                            tolls.add(toll1)
+//                            tolls.add(toll2)
+//                        }
+//                    }
+//
+//                    override fun onFailure(e: ApolloException) {
+//                        println("****Error apolloClient $e")
+//                    }
+//                });
+
+            val response = apolloClient.query(TollsInARouteByIdCompleteQuery(idRoute)).enqueue(
+                object : ApolloCall.Callback<TollsInARouteByIdCompleteQuery.Data>() {
+                    override fun onResponse(response: Response<TollsInARouteByIdCompleteQuery.Data>) {
                         //println("respuestaaaaa ${response?.data}")
-                        val arrayTolls = response?.data?.allTolls
+                        val arrayTolls = response?.data?.tollsInARouteByIdComplete
 
                         if (arrayTolls != null) {
-                            var num1 = (0 until (arrayTolls?.size ?: 10)).random()
-                            var num2 = (0 until (arrayTolls?.size ?: 10)).random()
-                            while (num1 == num2) {
-                                num2 = (0 until (arrayTolls?.size ?: 10)).random()
+
+                            for (toll in arrayTolls){
+                                var tollAux = createToll(toll)
+                                tolls.add(tollAux)
                             }
-
-                            var toll1Data = arrayTolls?.get(num1)
-                            var toll2Data = arrayTolls?.get(num2)
-
-                            var toll1 = createToll(toll1Data)
-                            var toll2 = createToll(toll2Data)
-
-                            tolls.add(toll1)
-                            tolls.add(toll2)
                         }
                     }
 
