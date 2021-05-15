@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.apollographql.apollo.coroutines.await
 import com.example.payandgo.databinding.ActivityRegisterBinding
 import com.example.payandgo.type.UserInput
@@ -56,7 +57,7 @@ class RegisterActivity : AppCompatActivity() {
                 && password.isNotEmpty()){
             val createUserMutation = CreateUserMutation(UserInput(username,lastname, Integer.parseInt(identifier),email,password))
 
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launchWhenResumed {
                 try {
                     val response = apolloClient.mutate(createUserMutation).await()
                     Toast.makeText(ctx, "Usuario creado", Toast.LENGTH_SHORT).show()

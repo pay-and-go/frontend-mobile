@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.lifecycleScope
 import com.apollographql.apollo.coroutines.await
 import com.example.payandgo.databinding.ActivityInRouteBinding
 import com.google.android.gms.location.*
@@ -54,6 +55,7 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     private var firstLocation = true
     private lateinit var locationStart: LatLng
     private lateinit var locationEnd: LatLng
+    private lateinit var idRoute: String
     private var latence = 1
 
 
@@ -75,8 +77,10 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
             val objetoIntent: Intent=intent
             //locationStart = objetoIntent.getParcelableExtra("latLngOrigen")
             locationEnd  = objetoIntent.getParcelableExtra("latLngDestino")
-            println("origennnnn $locationStart")
+            idRoute = objetoIntent.getStringExtra("idRoute")
+//            println("origennnnn $locationStart")
             println("destinoooo $locationEnd")
+            println("idRouteeee $idRoute")
         }catch (e: Exception){
             e.printStackTrace()
         }
@@ -180,11 +184,21 @@ class InRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         checkPermission()
         enableUserLocation()
-//        if (locationStart != null && locationEnd != null){
-//            val URL = getDirectionUrl(locationStart,locationEnd)
-//            println("GoogleMap URL : $URL")
-//            GetDirection(URL).execute()
-//        }
+        lifecycleScope.launchWhenResumed {
+            println("idRoute x2 $idRoute")
+            val response = apolloClient.query(TollsInARouteByIdCompleteQuery(idRoute)).await()
+            val tolls = response?.data?.tollsInARouteByIdComplete
+            for(t in tolls!!){
+                t!!.name?.let { createMarker(t!!.coor_lat, t!!.coor_lng, it) }
+            }
+        }
+    }
+
+    private fun createMarker(lat: Double, lng: Double, label: String) {
+        // Add a marker in Sydney and move the camera
+        val coordinates = LatLng(lat, lng)
+        val marker: MarkerOptions = MarkerOptions().position(coordinates).title(label)
+        mMap.addMarker(marker)
     }
 
     private fun setUserLocationMarker(location: Location){

@@ -86,6 +86,7 @@ class PaymentSelectedRouteActivity : AppCompatActivity() {
             val latLngDes = LatLng(route.latArrival, route.lngArrival)
             i.putExtra("latLngOrigen", latLngSta)
             i.putExtra("latLngDestino", latLngDes)
+            i.putExtra("idRoute", idRoute)
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
