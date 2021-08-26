@@ -21,6 +21,11 @@
         android:title="Mis Vehiculos"/>
 
     <item
+        android:id="@+id/createCar"
+        android:icon="@drawable/ic_vehicles"
+        android:title="Crear Vehiculo"/>
+
+    <item
         android:id="@+id/helpFragment"
         android:icon="@drawable/ic_help"
         android:title="Ayuda"/>

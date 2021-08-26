@@ -11,6 +11,7 @@ class Prefs(context: Context) {
     val SHARED_USER_CC = "user_cc"
     val SHARED_USER_MAIL = "user_mail"
     val SHARED_USER_PASSWORD = "user_password"
+    val SHARED_USER_TOKEN = "user_token"
     val storage = context.getSharedPreferences(SHARED_NAME, 0)
 
     fun saveId(id: Int){
@@ -59,6 +60,14 @@ class Prefs(context: Context) {
 
     fun getPassword(): String {
         return storage.getString(SHARED_USER_PASSWORD, "")!!
+    }
+
+    fun saveToken(token: String){
+        storage.edit().putString(SHARED_USER_TOKEN, token).apply()
+    }
+
+    fun getToken(): String {
+        return storage.getString(SHARED_USER_TOKEN, "")!!
     }
 
     fun wipe(){

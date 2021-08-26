@@ -177,6 +177,8 @@ class HomeFragment : Fragment() {
     }
 
     fun initRecycler() {
+        viewModel.routes.removeAll(viewModel.routes)
+        viewModel.idRoutes.removeAll(viewModel.idRoutes)
         checkAllCarsOfUser()
         //Para esperar la respuesta de la consulta anterior
         Handler().postDelayed({
@@ -231,6 +233,7 @@ class HomeFragment : Fragment() {
 
     fun checkAllCarsOfUser() {
         try {
+            viewModel.cars.removeAll(viewModel.cars)
             val response = apolloClient.query(VehicleByIdUserQuery(InitApplication.prefs.getId())).enqueue(
                 object : ApolloCall.Callback<VehicleByIdUserQuery.Data>() {
                     override fun onResponse(response: Response<VehicleByIdUserQuery.Data>) {

@@ -83,4 +83,13 @@
         android:name="com.example.payandgo.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/createCar"
+        android:name="com.example.payandgo.ui.vehicles.CreateCar"
+        android:label="fragment_create_car"
+        tools:layout="@layout/fragment_create_car" >
+        <action
+            android:id="@+id/action_createCar_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

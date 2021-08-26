@@ -55,7 +55,7 @@ class RegisterActivity : AppCompatActivity() {
         if(username.isNotEmpty() && lastname.isNotEmpty()
                 && identifier.isNotEmpty() && email.isNotEmpty()
                 && password.isNotEmpty()){
-            val createUserMutation = CreateUserMutation(UserInput(username,lastname, Integer.parseInt(identifier),email,password))
+            val createUserMutation = CreateUserMutation(UserInput(username,lastname,username, Integer.parseInt(identifier),email,password,password))
 
             lifecycleScope.launchWhenResumed {
                 try {

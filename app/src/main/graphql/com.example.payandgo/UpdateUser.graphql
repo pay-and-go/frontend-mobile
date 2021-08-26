@@ -1,0 +1,5 @@
+mutation UpdateUser($username: String!, $user: UserInputUpdate!, $token: String!) {
+    updateUser(username: $username, user: $user, token: $token){
+        success
+    }
+}

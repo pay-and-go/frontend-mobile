@@ -56,36 +56,29 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun accessToInfo(ctx:Context){
-        if(bindingLogin.etUserName.text.toString().isNotEmpty()
-                && bindingLogin.etPassword.text.toString().isNotEmpty()){
-            //Verificar si esta en la db
-            CoroutineScope(Dispatchers.IO).launch {
+        val userName = bindingLogin.etUserName.text.toString()
+        val password = bindingLogin.etPassword.text.toString()
+        if(userName.isNotEmpty()
+                && password.isNotEmpty()){
+            //Autenticarlo
+            CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    val response = apolloClient.query(AllUsersQuery()).await()
-                    val arrUsers = response?.data?.allUsers
-                    if (arrUsers != null) {
-                        val userEmail = bindingLogin.etUserName.text.toString()
-                        val userPass = bindingLogin.etPassword.text.toString()
-                        var found = false
-                        for (user in arrUsers){
-                            println("test: ${user?.mail == userEmail && user?.password == userPass} " +
-                                    " email ${user?.mail} password ${user?.password}")
-                            if(user?.mail == userEmail && user?.password == userPass){
-                                found = true
-                                prefs.saveId(user.id)
-                                prefs.saveFirstName(user.first_name)
-                                prefs.saveLastName(user.last_name)
-                                prefs.saveCC(user.cedula)
-                                prefs.saveMail(user.mail)
-                                prefs.savePassword(user.password)
-                                accesApp()
-                            }
-                        }
-                        if (!found){
-                            Toast.makeText(ctx, "No se encontro el usuario", Toast.LENGTH_SHORT).show()
-                        }
+                    val response = apolloClient.mutate(LoginMutation(userName, password)).await()
+                    if(response?.data?.login == null){
+                        Toast.makeText(ctx, "No se encontro el usuario", Toast.LENGTH_SHORT).show()
+                    }else{
+                        val token = response?.data?.login?.token
+                        val respQuery = apolloClient.query(GetUserQuery(userName,token!!)).await()
+                        val user = respQuery.data?.getUser
+                        prefs.saveId(user?.id!!)
+                        prefs.saveFirstName(user.first_name)
+                        prefs.saveLastName(user.last_name)
+                        prefs.saveCC(user.cedula)
+                        prefs.saveMail(user.mail)
+                        prefs.savePassword(password)
+                        prefs.saveToken(token)
+                        accesApp()
                     }
-                    println("Responsee ${arrUsers}")
                 }  catch (e: Exception){
                     println("exception $e")
                 }
